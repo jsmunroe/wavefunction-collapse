@@ -1,22 +1,33 @@
-import type Room from "../models/Room";
+import { useGame } from "../hooks";
+import type { Game } from "../models/Game";
 
-type RoomViewProps = {
-    room: Room;
-};
+export default function RoomView() {
+    const game = useGame();
 
-export default function RoomView({ room }: RoomViewProps) {
+    const room = game.player.currentRoom;
+
     return (
         <canvas
             width={room.width * 64}
             height={room.height * 64}
-            ref={canvas => {
-                if (canvas) {
-                    const ctx = canvas.getContext("2d");
-                    if (ctx !== null) {
-                        room.draw(ctx);
-                    }
-                }
-            }}
+            ref={(canvas) => drawRoom(canvas, game)}
         />
     );
+}
+
+const drawRoom = (canvas: HTMLCanvasElement | null, game: Game) => {
+    if (!canvas) {
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+        return;
+    }
+
+    const room = game.player.currentRoom;
+
+    room.draw(ctx);
+
+    requestAnimationFrame(() => drawRoom(canvas, game));
 }

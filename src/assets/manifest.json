@@ -1,0 +1,8 @@
+{
+    "images": [
+        {
+            "name": "player",
+            "path": "/src/assets/player.png"
+        }
+    ]
+}

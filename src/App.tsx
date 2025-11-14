@@ -1,16 +1,17 @@
 import { useState } from 'react'
-import './App.css'
-import { buildRoom } from './models/Room'
 import RoomView from './components/RoomView'
+import './App.css'
+import { GameContext } from './hooks/useGame';
+import { Game } from './models/Game';
 
 function App() {
-  const [room] = useState(buildRoom());
-
+  const [game] = useState(() => new Game);
+  
   return (
-    <>
-      <RoomView room={room} />
-    </>
+    <GameContext.Provider value={game}>
+      <RoomView />
+    </GameContext.Provider>
   )
 }
 
-export default App
+export default App;
