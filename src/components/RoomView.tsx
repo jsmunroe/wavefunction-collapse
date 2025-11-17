@@ -25,6 +25,8 @@ const drawRoom = (canvas: HTMLCanvasElement | null, game: Game) => {
         return;
     }
 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     const room = game.player.currentRoom;
 
     room.draw(ctx);

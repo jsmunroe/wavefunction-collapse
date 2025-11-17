@@ -1,10 +1,12 @@
 import type ISprite from "../contracts/ISprite";
+import type { Openings } from "./Openings";
 import Tile from "./Tile";
 import type { Point2D } from "./World";
+import type { Element2D } from "../utils/arrays";
 
 export default class Room {
     private _tiles: Tile[][];
-    private _sprites: Map<Point2D, ISprite[]> = new Map<Point2D, ISprite[]>();
+    private _sprites: Element2D<ISprite[]>[] = [];
 
     constructor(tiles: Tile[][]) {
         this._tiles = tiles;
@@ -23,16 +25,34 @@ export default class Room {
     }
 
     addSprite(sprite: ISprite) {
-        const sprites = this._sprites.get(sprite.coordinates.room) || [];
-        this._sprites.set(sprite.coordinates.room, [...sprites, sprite]);
+        const { room } = sprite.coordinates;
+
+        const existing = this._sprites.find(({item}) => item.includes(sprite));
+
+        if (existing) {
+            existing.item = existing.item.filter(s => s !== sprite);
+        }
+
+        const sprites = this._sprites.find(({x, y}) => x === room.x && y === room.y);
+
+        if (!sprites) {
+            this._sprites.push({ x: room.x, y: room.y, item: [sprite] });
+        } else {
+            sprites.item.push(sprite);
+        }
     }
 
     removeSprite(sprite: ISprite) {
-        const entry = Array.from(this._sprites).find(([, spritesAtPoint]) => spritesAtPoint.includes(sprite));
+        const entry = this._sprites.find(({item}) => item.includes(sprite));
         if (entry) {
-            const [point, spritesAtPoint] = entry;
-            this._sprites.set(point, spritesAtPoint.filter(s => s !== sprite));
+            entry.item = entry.item.filter(s => s !== sprite);
         }
+    }
+
+    getMovableDirectionsFrom({x, y}: Point2D): Openings {
+        const tile = this._tiles[y][x];
+
+        return tile.openings;
     }
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -45,11 +65,12 @@ export default class Room {
                 ctx.restore();
             }
         }
-        
-        for (const [{x, y}, sprites] of this._sprites) {
+
+        for (const {item: sprites} of this._sprites) {
             for (const sprite of sprites) {
+                const { x, y } = sprite.coordinates.room;
                 ctx.save();
-                ctx.translate(x * 64 + 16, y * 64 + 16);
+                ctx.translate(x * 64, y * 64);
                 sprite.draw(ctx);
                 ctx.restore();
             }

@@ -1,8 +1,10 @@
-import Tile from "../Tile";
+import Tile from "../../models/Tile";
 import { type Element2D } from "../../utils/arrays";
 import { select } from "../../utils/random";
-import { Direction, reverse } from "../Openings";
+import { Direction, reverse } from "../../models/Openings";
 import TileGrid from "./TileGrid";
+import type IRoomContext from "../../contracts/IRoomContext";
+import type { Point2D } from "../../models/World";
 
 export class TileGridBuilder {
     width: number;
@@ -15,8 +17,8 @@ export class TileGridBuilder {
         this._roomContext = roomContext;
     }
 
-    randomize(): TileGrid {
-        const tilesGrid = new TileGrid(this.width, this.height, this._roomContext);
+    randomize(world: Point2D): TileGrid {
+        const tilesGrid = new TileGrid(world, this.width, this.height, this._roomContext);
 
         for (let y = 0; y < this.height; y++) {
             this.applyConstraintsToNeighbors(tilesGrid, -1, y);

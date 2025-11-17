@@ -1,6 +1,7 @@
 import type IRoomContext from "../../contracts/IRoomContext";
 import { create, type Element2D } from "../../utils/arrays";
-import Tile from "../Tile";
+import Tile from "../../models/Tile";
+import type { Point2D } from "../../models/World";
 
 export default class TileGrid {
     private _tiles: Tile[][][];
@@ -9,12 +10,19 @@ export default class TileGrid {
     readonly height: number;
 
     private _roomContext: IRoomContext;
+    private _worldCoordinates: Point2D;
 
-    constructor(width: number, height: number, roomContext: IRoomContext) {
+
+    constructor(world: Point2D, width: number, height: number, roomContext: IRoomContext) {
         this._tiles = create(height, () => create(width, () => [...Tile.all]));
         this.width = width;
         this.height = height;
         this._roomContext = roomContext;
+        this._worldCoordinates = world;
+    }
+
+    get worldCoordinates(): Point2D {
+        return this._worldCoordinates;
     }
 
     get tiles(): Tile[][] {
@@ -31,32 +39,32 @@ export default class TileGrid {
 
     getTilesAt(x: number, y: number): Tile[] {
         if (x < 0) {
-            if (this._roomContext.hasRoom({ x: x - 1, y })) {
-                return [this._roomContext.getRoom({ x: x - 1, y }).tiles[y][this.width - 1]];
+            if (this._roomContext.hasRoom({ x: this._worldCoordinates.x - 1, y: this._worldCoordinates.y })) {
+                return [this._roomContext.getRoom({ x: this._worldCoordinates.x - 1, y: this._worldCoordinates.y }).tiles[y][this.width - 1]];
             }
 
             return Tile.all;
         }
 
         if (x >= this.width) {
-            if (this._roomContext.hasRoom({ x: x + 1, y })) {
-                return [this._roomContext.getRoom({ x: x + 1, y }).tiles[y][0]];
+            if (this._roomContext.hasRoom({ x: this._worldCoordinates.x + 1, y: this._worldCoordinates.y })) {
+                return [this._roomContext.getRoom({ x: this._worldCoordinates.x + 1, y: this._worldCoordinates.y }).tiles[y][0]];
             }
 
             return Tile.all;
         }
 
         if (y < 0) {
-            if (this._roomContext.hasRoom({ x, y: y - 1 })) {
-                return [this._roomContext.getRoom({ x, y: y - 1 }).tiles[this.height - 1][x]];
+            if (this._roomContext.hasRoom({ x: this._worldCoordinates.x, y: this._worldCoordinates.y - 1 })) {
+                return [this._roomContext.getRoom({ x: this._worldCoordinates.x, y: this._worldCoordinates.y - 1 }).tiles[this.height - 1][x]];
             }
 
             return Tile.all;
         }
 
         if (y >= this.height) {
-            if (this._roomContext.hasRoom({ x, y: y + 1 })) {
-                return [this._roomContext.getRoom({ x, y: y + 1 }).tiles[0][x]];
+            if (this._roomContext.hasRoom({ x: this._worldCoordinates.x, y: this._worldCoordinates.y + 1 })) {
+                return [this._roomContext.getRoom({ x: this._worldCoordinates.x, y: this._worldCoordinates.y + 1 }).tiles[0][x]];
             }
 
             return Tile.all;

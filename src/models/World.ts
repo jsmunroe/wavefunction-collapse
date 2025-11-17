@@ -1,5 +1,5 @@
 import type IRoomContext from "../contracts/IRoomContext";
-import { TileGridBuilder } from "./builders/TileGridBuilder";
+import { TileGridBuilder } from "../services/builders/TileGridBuilder";
 import Room from "./Room";
 
 export type Point2D = {
@@ -8,7 +8,7 @@ export type Point2D = {
 }
 
 export default class World implements IRoomContext {
-    private _rooms: Map<Point2D, Room> = new Map<Point2D, Room>();
+    private _rooms: Map<string, Room> = new Map<string, Room>();
     private _tileGridBuilder: TileGridBuilder;
 
     constructor() {
@@ -18,7 +18,7 @@ export default class World implements IRoomContext {
 
     getRoom({ x, y }: Point2D): Room {
         const point: Point2D = { x, y };
-        let room = this._rooms.get(point);
+        let room = this._rooms.get(JSON.stringify(point));
         if (!room) {
             room = this.createRoom(x, y);
         }
@@ -27,13 +27,13 @@ export default class World implements IRoomContext {
 
     hasRoom({ x, y }: Point2D): boolean {
         const point: Point2D = { x, y };
-        return this._rooms.has(point);
+        return this._rooms.has(JSON.stringify(point));
     }
 
     private createRoom(x: number, y: number): Room {
-        const tileGrid = this._tileGridBuilder.randomize();
+        const tileGrid = this._tileGridBuilder.randomize({ x, y });
         const room = new Room(tileGrid.tiles);
-        this._rooms.set({ x, y }, room);
+        this._rooms.set(JSON.stringify({ x, y }), room);
         
         return room;
     }
