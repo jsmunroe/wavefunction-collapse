@@ -1,14 +1,14 @@
 import manifest from "../assets/manifest.json";
 
 export default class Library {
-    private _assets: Asset[] = [];
+
+    private _assetCache: Map<string, Asset> = new Map();
 
     constructor() {
         this.loadAssets();
     }
 
     loadAssets() {
-        this._assets = [];
         for (const imageInfo of manifest.images) {
             const img = new Image();
             img.src = imageInfo.path;
@@ -20,6 +20,8 @@ export default class Library {
                 path: imageInfo.path,
             };
 
+            this._assetCache.set(imageInfo.name, asset);
+
             img.onload = () => {
                 asset.isLoaded = true;
             }
@@ -27,13 +29,11 @@ export default class Library {
             img.onerror = () => {
                 throw new Error(`Failed to load image from ${imageInfo.path}`);
             }
-
-            this._assets.push(asset);
         }
     }
 
     getImage(name: string): CanvasImageSource | null {
-        const asset = this._assets.find(a => a.name === name);
+        const asset = this._assetCache.get(name);
 
         return asset?.isLoaded ? asset.image : null;
     }

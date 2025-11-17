@@ -24,6 +24,10 @@ export default class Room {
         return [...this._tiles.map(row => [...row])];
     }
 
+    get sprites(): ISprite[] {
+        return this._sprites.flatMap(({item}) => item);
+    }
+
     addSprite(sprite: ISprite) {
         const { room } = sprite.coordinates;
 

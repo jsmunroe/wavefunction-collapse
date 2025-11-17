@@ -2,7 +2,15 @@
     "images": [
         {
             "name": "player",
-            "path": "/src/assets/player.png"
+            "path": "/src/assets/player/player.png"
+        },
+        {
+            "name": "player.walking.0",
+            "path": "/src/assets/player/player.walking.0.png"
+        },
+        {
+            "name": "player.walking.1",
+            "path": "/src/assets/player/player.walking.1.png"
         }
     ]
 }

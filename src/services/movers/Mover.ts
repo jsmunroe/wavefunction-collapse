@@ -10,5 +10,5 @@ export default abstract class Mover {
         this.entity = entity;
     }
 
-    abstract update(deltaTime: number): void;
+    abstract update(): void;
 }

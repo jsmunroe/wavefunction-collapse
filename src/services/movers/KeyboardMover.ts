@@ -10,13 +10,29 @@ const keyboardMoverRegistry = new FinalizationRegistry((controller: AbortControl
 
 export default class KeyboardMover extends Mover {
 
+    private _keysDown: Set<string> = new Set();
+
     constructor(game: Game, entity: IMovableSprite) {
         super(game, entity);
 
         this.bindEvents();
+        setTimeout(() => this.update(), 10);
     }
 
-    update(_deltaTime: number): void { }
+    update(): void { 
+        if (this._keysDown.has("ArrowUp") || this._keysDown.has("w")) {
+            this.move(Direction.North);
+        }
+        else if (this._keysDown.has("ArrowRight") || this._keysDown.has("d")) {
+            this.move(Direction.East);
+        }
+        else if (this._keysDown.has("ArrowDown") || this._keysDown.has("s")) {
+            this.move(Direction.South);
+        }
+        else if (this._keysDown.has("ArrowLeft") || this._keysDown.has("a")) {
+            this.move(Direction.West);
+        }
+    }
 
     private bindEvents(): void {
         const controller = new AbortController();
@@ -25,23 +41,15 @@ export default class KeyboardMover extends Mover {
         const { signal } = controller;
 
         document.addEventListener("keydown", wrapWeakHandler(this, this.onKeyDown), { signal });
+        document.addEventListener("keyup", wrapWeakHandler(this, this.onKeyUp), { signal });
     }
 
     private onKeyDown = (event: KeyboardEvent): void => {
-        switch (event.key) {
-            case "ArrowUp":
-                this.move(Direction.North);
-                break;
-            case "ArrowRight":
-                this.move(Direction.East);
-                break;
-            case "ArrowDown":
-                this.move(Direction.South);
-                break;
-            case "ArrowLeft":
-                this.move(Direction.West);
-                break;
-        }
+        this._keysDown.add(event.key);
+    };
+
+    private onKeyUp = (event: KeyboardEvent): void => {
+        this._keysDown.delete(event.key);
     };
 
     private move(direction: Direction): void {

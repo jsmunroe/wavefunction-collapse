@@ -29,6 +29,10 @@ const drawRoom = (canvas: HTMLCanvasElement | null, game: Game) => {
 
     const room = game.player.currentRoom;
 
+    for (const sprite of room.sprites) {
+        sprite.update();
+    }
+
     room.draw(ctx);
 
     requestAnimationFrame(() => drawRoom(canvas, game));

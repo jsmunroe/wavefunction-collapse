@@ -11,13 +11,16 @@ export default class Player implements IMovableSprite {
     private _game: Game;
     private _world: World;
 
+    private _sprite = 'player';
+
     private _coordinates: Coordinates = { room: { x: 5, y: 5 }, world: { x: 0, y: 0 } };
 
     private _currentRoom: Room;
 
     private _mover: Mover;
 
-    private _facing: Point2D = { x: 1, y: 1 };
+    private _moving: Point2D = { x: 1, y: 1 };
+    private _facing: number = 1;
 
     private _isMoving: boolean = false;
     private _offset: Point2D = { x: 0, y: 0 };
@@ -31,13 +34,13 @@ export default class Player implements IMovableSprite {
         this._mover = new KeyboardMover(this._game, this);
     }
 
-    moveTo(coordinates: Coordinates): void {
+    moveTo(coordinates: Coordinates): Promise<void> {
         if (this._isMoving) {
-            return;
+            return Promise.resolve();
         }
 
         this._isMoving = true;
-        this._facing = this.toFacing(coordinates);
+        this.computeFacingAndMoving(coordinates);
 
         this._coordinates = coordinates;
 
@@ -50,23 +53,35 @@ export default class Player implements IMovableSprite {
             this._currentRoom.addSprite(this);
         }
 
+        const sprites = [
+            'player.walking.0',
+            'player',
+            'player.walking.1',
+            'player',
+        ]
 
-        this._offset = { x: 64 * this._facing.x, y: 64 * this._facing.y };
-        const offset = (count: number) => {
+        return new Promise((resolve) => {
+            this._offset = { x: 64 * this._moving.x, y: 64 * this._moving.y };
+            const offset = (count: number) => {
 
-            this._offset.x -= this._facing.x;
-            this._offset.y -= this._facing.y;
+                this._offset.x -= this._moving.x;
+                this._offset.y -= this._moving.y;
 
-            if (count >= 0) {
-                setTimeout(() => offset(count - 1), 1);
+                this._sprite = sprites[Math.floor(count / 16) % sprites.length];
+
+                if (count >= 0) {
+                    setTimeout(() => offset(count - 1), 5);
+                }
+                else {
+                    this._isMoving = false;
+                    this._offset = { x: 0, y: 0 };
+                    this._sprite = 'player';
+                    resolve();
+                }
             }
-            else {
-                this._isMoving = false;
-                this._offset = { x: 0, y: 0 };
-            }
-        }
 
-        offset(64);
+            offset(64);
+        })
     }
 
     get coordinates() {
@@ -87,22 +102,23 @@ export default class Player implements IMovableSprite {
         this._currentRoom.addSprite(this);
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
-        let facing = Math.sign(this._facing.x);
-        facing = facing === 0 ? 1 : facing;
+    update(): void {
+        this._mover.update();
+    }
 
-        ctx.save();
-        if (facing < 0) {
+    draw(ctx: CanvasRenderingContext2D): void {
+            ctx.save();
+        if (this._facing < 0) {
             ctx.translate(48, 16);
         }
         else {
             ctx.translate(16, 16);
         }
         ctx.translate(this._offset.x, this._offset.y);
-        ctx.scale(facing, 1);
+        ctx.scale(this._facing, 1);
 
         ctx.beginPath();
-        const image = this._game.library.getImage('player');
+        const image = this._game.library.getImage(this._sprite);
         if (image) {
             ctx.drawImage(image, 0, 0);
         }
@@ -111,47 +127,47 @@ export default class Player implements IMovableSprite {
         ctx.restore();
     }
 
-    private toFacing(coordinates: Coordinates): Point2D {
-        const facing = { x: 0, y: 0 };
+    private computeFacingAndMoving(coordinates: Coordinates) {
+        this._moving = { x: 0, y: 0 };
 
         if (this._coordinates.world.x - coordinates.world.x > 0) {
-            facing.x = 1;
+            this._facing = 1;
+            this._moving = {...this._moving, x: 1 };
         }
         else if (this._coordinates.world.x - coordinates.world.x < 0) {
-            facing.x = -1;
+            this._facing = -1;
+            this._moving = {...this._moving, x: -1 };
         }
         else {
             if (this._coordinates.room.x - coordinates.room.x > 0) {
-                facing.x = 1;
+                this._facing = 1;
+                this._moving = {...this._moving, x: 1 };
             }
             else if (this._coordinates.room.x - coordinates.room.x < 0) {
-                facing.x = -1;
+                this._facing = -1;
+                this._moving = {...this._moving, x: -1 };
             }
             else {
-                facing.x = 0;
+                this._moving = {...this._moving, x: 0 };
             }
         }
 
         if (this._coordinates.world.y - coordinates.world.y > 0) {
-
-            facing.y = 1;
+            this._moving = {...this._moving, y: 1 };
         }
         else if (this._coordinates.world.y - coordinates.world.y < 0) {
-
-            facing.y = -1;
+            this._moving = {...this._moving, y: -1 };
         }
         else{
             if (this._coordinates.room.y - coordinates.room.y > 0) {
-                facing.y = 1;
+                this._moving = {...this._moving, y: 1 };
             }
             else if (this._coordinates.room.y - coordinates.room.y < 0) {
-                facing.y = -1;
+                this._moving = {...this._moving, y: -1 };
             }
             else {
-                facing.y = 0;
+                this._moving = {...this._moving, y: 0 };
             }
         }
-
-        return facing;
     }
 }
