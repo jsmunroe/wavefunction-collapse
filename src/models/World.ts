@@ -1,5 +1,7 @@
 import type IRoomContext from "../contracts/IRoomContext";
 import { TileGridBuilder } from "../services/builders/TileGridBuilder";
+import Blob from "./entities/Blob";
+import type { Game } from "./Game";
 import Room from "./Room";
 
 export type Point2D = {
@@ -8,12 +10,13 @@ export type Point2D = {
 }
 
 export default class World implements IRoomContext {
+    private _game: Game;
     private _rooms: Map<string, Room> = new Map<string, Room>();
     private _tileGridBuilder: TileGridBuilder;
 
-    constructor() {
+    constructor(game: Game) {
+        this._game = game;
         this._tileGridBuilder = new TileGridBuilder(10, 10, this);
-        this.createRoom(0, 0);
     }
 
     getRoom({ x, y }: Point2D): Room {
@@ -35,6 +38,12 @@ export default class World implements IRoomContext {
         const room = new Room(tileGrid.tiles);
         this._rooms.set(JSON.stringify({ x, y }), room);
         
+        for (let i = 0; i < 5; i++) {
+            const roomX = Math.floor(Math.random() * room.width);
+            const roomY = Math.floor(Math.random() * room.height);
+            room.addSprite(new Blob(this._game, { world: { x, y }, room: { x: roomX, y: roomY } }));
+        }
+
         return room;
     }
 }

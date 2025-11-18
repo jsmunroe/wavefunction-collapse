@@ -11,6 +11,14 @@
         {
             "name": "player.walking.1",
             "path": "/src/assets/player/player.walking.1.png"
+        },
+        {
+            "name": "blob",
+            "path": "/src/assets/blob/blob.png"
+        },
+        {
+            "name": "blob.bouncing",
+            "path": "/src/assets/blob/blob.bouncing.png"
         }
     ]
 }

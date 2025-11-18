@@ -1,6 +1,7 @@
 import type { Coordinates } from "../models/Coordinates";
+import type { Direction } from "../models/Openings";
 import type ISprite from "./ISprite";
 
 export default interface IMovableSprite extends ISprite {
-    moveTo(coordinates: Coordinates): Promise<void>;
+    moveTo(direction: Direction, coordinates: Coordinates): Promise<void>;
 }

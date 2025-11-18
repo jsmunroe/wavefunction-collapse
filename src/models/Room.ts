@@ -54,9 +54,14 @@ export default class Room {
     }
 
     getMovableDirectionsFrom({x, y}: Point2D): Openings {
-        const tile = this._tiles[y][x];
+        try {
+            const tile = this._tiles[y][x];
 
-        return tile.openings;
+            return tile.openings;
+        }
+        catch {
+            return 0;
+        }
     }
 
     draw(ctx: CanvasRenderingContext2D) {

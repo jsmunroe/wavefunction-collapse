@@ -16,7 +16,6 @@ export default class KeyboardMover extends Mover {
         super(game, entity);
 
         this.bindEvents();
-        setTimeout(() => this.update(), 10);
     }
 
     update(): void { 
@@ -59,45 +58,47 @@ export default class KeyboardMover extends Mover {
         const { room } = this.entity.coordinates;
         const openings = currentRoom.getMovableDirectionsFrom(room);
 
-        if ((openings & direction) !== 0) {
-            let { x, y } = room;
-
-            switch (direction) {
-                case Direction.North:
-                    y -= 1;
-                    break;
-                case Direction.East:
-                    x += 1;
-                    break;
-                case Direction.South:
-                    y += 1;
-                    break;
-                case Direction.West:
-                    x -= 1;
-                    break;
-            }
-
-            if (x < 0) {
-                x = currentRoom.width - 1;
-                world = { ...world, x: world.x - 1 };
-            }
-
-            if (x >= currentRoom.width) {
-                x = 0;
-                world = { ...world, x: world.x + 1 };
-            }
-
-            if (y < 0) {
-                y = currentRoom.height - 1;
-                world = { ...world, y: world.y - 1 };
-            }
-
-            if (y >= currentRoom.height) {
-                y = 0;
-                world = { ...world, y: world.y + 1 };
-            }
-
-            this.entity.moveTo({ world, room: { x, y } });
+        if ((openings & direction) === 0) {
+            return;
         }
+
+        let { x, y } = room;
+
+        switch (direction) {
+            case Direction.North:
+                y -= 1;
+                break;
+            case Direction.East:
+                x += 1;
+                break;
+            case Direction.South:
+                y += 1;
+                break;
+            case Direction.West:
+                x -= 1;
+                break;
+        }
+
+        if (x < 0) {
+            x = currentRoom.width - 1;
+            world = { ...world, x: world.x - 1 };
+        }
+
+        if (x >= currentRoom.width) {
+            x = 0;
+            world = { ...world, x: world.x + 1 };
+        }
+
+        if (y < 0) {
+            y = currentRoom.height - 1;
+            world = { ...world, y: world.y - 1 };
+        }
+
+        if (y >= currentRoom.height) {
+            y = 0;
+            world = { ...world, y: world.y + 1 };
+        }
+
+        this.entity.moveTo(direction, { world, room: { x, y } });
     }
 }
