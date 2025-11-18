@@ -9,7 +9,7 @@ export default class Library {
     }
 
     loadAssets() {
-        for (const imageInfo of manifest.images) {
+        for (const imageInfo of manifest.sprites) {
             const img = new Image();
             img.src = imageInfo.path;
             

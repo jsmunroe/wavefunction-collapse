@@ -1,13 +1,20 @@
-import RandomMover from "../../services/movers/RandomMover";
+import FollowWallMover from "../../services/movers/FollowWallMover";
 import type { Coordinates } from "../Coordinates";
 import type { Game } from "../Game";
 import type { Direction } from "../Openings";
-import Entity from "./Entity";
+import Entity, { FacingDirections } from "./Entity";
 
-export default class Blob extends Entity {
+export default class Flicker extends Entity {
     constructor(game: Game, coordinates: Coordinates) {
-        super(game, 'blob', coordinates);
-        this.mover = new RandomMover(this.game, this, { stepDelay: 1000 });
+        super(game, 'flicker', coordinates, {
+            facingDirections: FacingDirections.None,
+            animationFrameCount: 8,
+        });
+        this.mover = new FollowWallMover(this.game, this, { stepDelay: 500 });
+    }
+
+    protected updateFrame(frame: number): string {
+        return `flicker.floating.${frame}`;
     }
 
     moveTo(direction: Direction, coordinates: Coordinates): Promise<void> {
@@ -28,13 +35,7 @@ export default class Blob extends Entity {
             formerRoom.removeSprite(this);
             this._currentRoom.addSprite(this);
         }
-
-        const sprites = [
-            'blob.bouncing'
-        ]
-
-        return this.animate(sprites, 256, {
-            curve: (t: number) => (2 * t - 1) ** 2 * 0.30 - 0.30
-        });
+        
+        return this.animate([], 1024);
     }
 }

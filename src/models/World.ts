@@ -1,6 +1,7 @@
 import type IRoomContext from "../contracts/IRoomContext";
 import { TileGridBuilder } from "../services/builders/TileGridBuilder";
 import Blob from "./entities/Blob";
+import Flicker from "./entities/Flicker";
 import type { Game } from "./Game";
 import Room from "./Room";
 
@@ -38,10 +39,10 @@ export default class World implements IRoomContext {
         const room = new Room(tileGrid.tiles);
         this._rooms.set(JSON.stringify({ x, y }), room);
         
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 1; i++) {
             const roomX = Math.floor(Math.random() * room.width);
             const roomY = Math.floor(Math.random() * room.height);
-            room.addSprite(new Blob(this._game, { world: { x, y }, room: { x: roomX, y: roomY } }));
+            room.addSprite(new Flicker(this._game, { world: { x, y }, room: { x: roomX, y: roomY } }));
         }
 
         return room;

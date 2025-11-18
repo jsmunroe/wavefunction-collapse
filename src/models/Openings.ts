@@ -18,3 +18,11 @@ export function isOpen(openings: Openings, direction: Direction): boolean {
 export function reverse(direction: Direction): Direction {
     return rotateNibbleLeft(direction, 2) as Direction;
 }
+
+export function right(direction: Direction): Direction {
+    return rotateNibbleLeft(direction, 1) as Direction;
+}
+
+export function left(direction: Direction): Direction {
+    return rotateNibbleLeft(direction, 3) as Direction;
+}

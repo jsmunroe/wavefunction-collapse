@@ -9,22 +9,12 @@ export type RandomMoverOptions = {
 }
 
 export default class RandomMover extends Mover {
-
-    private _stepDelay: number;
-    private _isDelaying: boolean = false;
-
     constructor(game: Game, entity: IMovableSprite, options: RandomMoverOptions = {}) {
-        super(game, entity);
-        this._stepDelay = options.stepDelay ?? 0;
-        this._isDelaying = true;
-        
-        setTimeout(() => {
-            this._isDelaying = false;
-        }, Math.floor(Math.random() * (this._stepDelay ?? 500)));
+        super(game, entity, options);
     }
 
     update(): void {
-        if (this._isDelaying) {
+        if (this.isDelaying) {
             return;
         }
 
@@ -59,13 +49,8 @@ export default class RandomMover extends Mover {
 
         const coordinates = this.moveInRoom(direction, this.entity.coordinates);
 
-        this.entity.moveTo(direction, coordinates);
-
-        this._isDelaying = true;
-
-        setTimeout(() => {
-            this._isDelaying = false;
-        }, this._stepDelay);
+        this.entity.moveTo(direction, coordinates)
+            .then(() => this.endMove());
     }
 
 }

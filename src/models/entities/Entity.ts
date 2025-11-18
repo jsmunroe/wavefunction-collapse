@@ -12,6 +12,18 @@ export type AnimateOptions = {
     curve?: (t: number) => number;
 }
 
+export const FacingDirections = {
+    None: 0,
+    EastWest: 1, 
+} as const;
+
+export type FacingDirections = typeof FacingDirections[keyof typeof FacingDirections];
+
+export type EntityOptions = {
+    facingDirections?: FacingDirections,
+    animationFrameCount?: number,
+}
+
 export default abstract class Entity implements IMovableSprite {
     protected game: Game;
     protected world: World;
@@ -27,13 +39,16 @@ export default abstract class Entity implements IMovableSprite {
 
     protected moving: Point2D = { x: 1, y: 1 };
     protected facing: number = 1;
+    protected facingDirections: FacingDirections = FacingDirections.EastWest;
 
-    protected isMoving: boolean = false;
+    protected animationFrameCount: number = 1;
+
+    protected _isMoving: boolean = false;
 
     protected offset: Point2D = { x: 0, y: 0 };
     protected offsetZ: number = 0;
 
-    constructor(game: Game, sprite: string, coordinates: Coordinates) {
+    constructor(game: Game, sprite: string, coordinates: Coordinates, options: EntityOptions = {}) {
         this.game = game;
         this.world = game.world;
         this._coordinates = coordinates;
@@ -43,6 +58,13 @@ export default abstract class Entity implements IMovableSprite {
         this.mover = new RandomMover(this.game, this);
 
         this.sprite = this.standingSprite = sprite;
+
+        this.facingDirections = options.facingDirections ?? this.facingDirections;
+        this.animationFrameCount = options.animationFrameCount ?? this.animationFrameCount;
+
+        if (this.animationFrameCount > 1) {
+            this.cycleFrames();
+        }
     }
 
     get coordinates(): Coordinates {
@@ -51,6 +73,10 @@ export default abstract class Entity implements IMovableSprite {
 
     get currentRoom(): Room {
         return this._currentRoom;
+    }
+
+    get isMoving(): boolean {
+        return this._isMoving;
     }
 
     abstract moveTo(direction: Direction, coordinates: Coordinates): Promise<void>;
@@ -90,6 +116,10 @@ export default abstract class Entity implements IMovableSprite {
         this._currentRoom.addSprite(this);
     }
 
+    protected updateFrame(frame: number): string | null {
+        return null;
+    }
+
     protected animate(frames: string[], frameCount: number, options: AnimateOptions = {}): Promise<void> {
         return new Promise((resolve) => {
             this.offset = { x: 64 * this.moving.x, y: 64 * this.moving.y };
@@ -101,13 +131,15 @@ export default abstract class Entity implements IMovableSprite {
                 const t = 1 - count / frameCount;
                 this.offsetZ = options.curve ? options.curve(t) * 64 : 0;
 
-                this.sprite = frames[Math.floor(count / 16) % frames.length];
+                if (frames.length > 0) {
+                    this.sprite = frames[Math.floor((frameCount - count) / 16) % frames.length];
+                }
 
                 if (count >= 0) {
                     setTimeout(() => animate(count - 1), 4);
                 }
                 else {
-                    this.isMoving = false;
+                    this._isMoving = false;
                     this.offset = { x: 0, y: 0 };
                     this.sprite = this.standingSprite;
                     resolve();
@@ -129,12 +161,18 @@ export default abstract class Entity implements IMovableSprite {
         } 
         
         if (direction === Direction.West) {
-            this.facing = 1;
+            this.facing = this.facingDirections == FacingDirections.EastWest ? 1 : this.facing;
             this.moving = { x: 1, y: 0 };
         }
         else if (direction === Direction.East) {
-            this.facing = -1;
+            this.facing = this.facingDirections == FacingDirections.EastWest ? -1 : this.facing;
             this.moving = { x: -1, y: 0 };
         }
+    }
+
+    private cycleFrames(frame: number = 0): void {
+        this.sprite = this.updateFrame(frame) ?? this.sprite;
+
+        setTimeout(() => this.cycleFrames((frame + 1) % this.animationFrameCount), 128);
     }
 }

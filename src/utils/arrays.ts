@@ -21,6 +21,7 @@ declare global {
         findNextIndex(predicate: (item: T) => boolean, fromIndex: number): number;
         flat2D(): Element2D<Flatten<T>>[];
         map2D<TResult>(callback: (item: Flatten<T>, x: number, y: number) => TResult): TResult[][];
+        intersect(other: T[]): T[];
     }
 }
 
@@ -58,5 +59,11 @@ if (!Array.prototype.map2D) {
         }
         
         return result;
+    };
+}
+
+if (!Array.prototype.intersect) {
+    Array.prototype.intersect = function <T>(this: T[], other: T[]): T[] {
+        return this.filter(item => other.includes(item));
     };
 }

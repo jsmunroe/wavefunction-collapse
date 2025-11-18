@@ -15,11 +15,11 @@ export default class Player extends Entity {
     }
 
     moveTo(direction: Direction, coordinates: Coordinates): Promise<void> {
-        if (this.isMoving) {
+        if (this._isMoving) {
             return Promise.resolve();
         }
 
-        this.isMoving = true;
+        this._isMoving = true;
         this.computeFacingAndMoving(direction);
 
         this._coordinates = coordinates;
