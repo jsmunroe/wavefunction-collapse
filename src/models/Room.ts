@@ -5,10 +5,12 @@ import type { Point2D } from "./World";
 import type { Element2D } from "../utils/arrays";
 
 export default class Room {
+    private _coordinates: Point2D;
     private _tiles: Tile[][];
     private _sprites: Element2D<ISprite[]>[] = [];
 
-    constructor(tiles: Tile[][]) {
+    constructor(coordinates: Point2D, tiles: Tile[][]) {
+        this._coordinates = coordinates;
         this._tiles = tiles;
     }
 
@@ -26,6 +28,18 @@ export default class Room {
 
     get sprites(): ISprite[] {
         return this._sprites.flatMap(({item}) => item);
+    }
+
+    get level(): number {
+        return Math.ceil( Math.sqrt(this._coordinates.x ** 2 + this._coordinates.y ** 2)) + 1;
+    }
+
+    get x(): number {
+        return this._coordinates.x;
+    }
+
+    get y(): number {
+        return this._coordinates.y;
     }
 
     addSprite(sprite: ISprite) {
@@ -84,5 +98,9 @@ export default class Room {
                 ctx.restore();
             }
         }
+
+        ctx.font = "24px Arial";
+        ctx.fillStyle = "#CCCCEE";
+        ctx.fillText(`${this.level}`, 20, 30);
     }
 }

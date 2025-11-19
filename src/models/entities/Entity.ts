@@ -22,6 +22,7 @@ export type FacingDirections = typeof FacingDirections[keyof typeof FacingDirect
 export type EntityOptions = {
     facingDirections?: FacingDirections,
     animationFrameCount?: number,
+    animationSpeed?: 1 | 2 | 3 | 4 | 5;
 }
 
 export default abstract class Entity implements IMovableSprite {
@@ -42,6 +43,7 @@ export default abstract class Entity implements IMovableSprite {
     protected facingDirections: FacingDirections = FacingDirections.EastWest;
 
     protected animationFrameCount: number = 1;
+    protected animationSpeed: 1 | 2 | 3 | 4 | 5 = 3;
 
     protected _isMoving: boolean = false;
 
@@ -61,6 +63,7 @@ export default abstract class Entity implements IMovableSprite {
 
         this.facingDirections = options.facingDirections ?? this.facingDirections;
         this.animationFrameCount = options.animationFrameCount ?? this.animationFrameCount;
+        this.animationSpeed = options.animationSpeed ?? this.animationSpeed;
 
         if (this.animationFrameCount > 1) {
             this.cycleFrames();
@@ -173,6 +176,8 @@ export default abstract class Entity implements IMovableSprite {
     private cycleFrames(frame: number = 0): void {
         this.sprite = this.updateFrame(frame) ?? this.sprite;
 
-        setTimeout(() => this.cycleFrames((frame + 1) % this.animationFrameCount), 128);
+        const delay = [256, 128, 96, 64, 48][this.animationSpeed]
+
+        setTimeout(() => this.cycleFrames((frame + 1) % this.animationFrameCount), delay);
     }
 }

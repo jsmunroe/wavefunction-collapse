@@ -29,7 +29,11 @@ export default class TileGrid {
         return this._tiles.map2D(tiles => tiles[0]);
     }
 
-    get allTiles(): Element2D<Tile[]>[] {
+    get allTiles(): Element2D<Tile>[] {
+        return this._tiles.flat2D().map(element => ({ x: element.x, y: element.y, item: element.item[0] }));
+    }
+
+    get allSupersets(): Element2D<Tile[]>[] {
         return this._tiles.flat2D();
     }
 

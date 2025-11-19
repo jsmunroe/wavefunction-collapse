@@ -9,6 +9,7 @@ export default class Flicker extends Entity {
         super(game, 'flicker', coordinates, {
             facingDirections: FacingDirections.None,
             animationFrameCount: 8,
+            animationSpeed: 4,
         });
         this.mover = new FollowWallMover(this.game, this, { stepDelay: 500 });
     }

@@ -1,6 +1,8 @@
 import type IRoomContext from "../contracts/IRoomContext";
 import { TileGridBuilder } from "../services/builders/TileGridBuilder";
+import { randomCoordinate, select } from "../utils/random";
 import Blob from "./entities/Blob";
+import type Entity from "./entities/Entity";
 import Flicker from "./entities/Flicker";
 import type { Game } from "./Game";
 import Room from "./Room";
@@ -36,15 +38,39 @@ export default class World implements IRoomContext {
 
     private createRoom(x: number, y: number): Room {
         const tileGrid = this._tileGridBuilder.randomize({ x, y });
-        const room = new Room(tileGrid.tiles);
+        this._tileGridBuilder.removeIsolatedSections(tileGrid);
+        
+        const room = new Room({x, y}, tileGrid.tiles);
         this._rooms.set(JSON.stringify({ x, y }), room);
         
-        for (let i = 0; i < 1; i++) {
-            const roomX = Math.floor(Math.random() * room.width);
-            const roomY = Math.floor(Math.random() * room.height);
-            room.addSprite(new Flicker(this._game, { world: { x, y }, room: { x: roomX, y: roomY } }));
+        for (const entity of this.createEntities({ x, y })) {
+            room.addSprite(entity);
         }
 
         return room;
+    }
+
+    private createEntities(worldCoordinates: Point2D): Entity[] {
+        const room = this.getRoom(worldCoordinates);
+        const { x, y } = worldCoordinates;
+
+        const entities: Entity[] = [];
+
+        const entityCount = Math.ceil(Math.random() * room.level);
+
+        const coordInit = randomCoordinate(0, room.width - 1, 0, room.height - 1);
+
+        const entityInits = [
+            () => new Blob(this._game, { world: { x, y }, room: coordInit() }),
+            () => new Flicker(this._game, { world: { x, y }, room: coordInit() }),
+        ];
+
+        for (let i = 0; i < entityCount; i++) {
+            const entity = select(entityInits)();
+        
+            entities.push(entity);
+        }
+
+        return entities;
     }
 }

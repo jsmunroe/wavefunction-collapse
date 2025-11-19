@@ -35,6 +35,6 @@ export default class Blob extends Entity {
 
         return this.animate(sprites, 256, {
             curve: (t: number) => (2 * t - 1) ** 2 * 0.30 - 0.30
-        });
+        })
     }
 }

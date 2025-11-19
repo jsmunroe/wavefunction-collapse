@@ -24,6 +24,10 @@ export default abstract class Mover {
     abstract update(): void;
 
     protected endMove(): void {
+        if (this.isDelaying || this.stepDelay <= 0) {
+            return;
+        }
+
         this.isDelaying = true;
 
         setTimeout(() => {

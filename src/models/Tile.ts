@@ -3,42 +3,48 @@ import type { Openings } from "./Openings";
 import { Direction, isOpen } from "./Openings";
 
 export default class Tile {
-    private _openings: Openings;
 
     constructor(openings: Openings) {
-        this._openings = openings;
+        this.openings = openings;
     }
 
-    get openings(): Openings {
-        return this._openings;
-    }
+    section: number = -1;
+
+    openings: Openings;
+
 
     boundary(direction: Direction): Boundary {
-        return new Boundary(this._openings, direction);
+        return new Boundary(this.openings, direction);
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = "#CCCCEE";
         ctx.clearRect(0, 0, 64, 64);
+
+        // if (this.section >= 0) {
+        //     ctx.fillStyle = `hsl(${(this.section * 23) % 360}, 50%, 20%)`;
+        //     ctx.fillRect(0, 0, 64, 64);
+        // }
+
+        ctx.fillStyle = "#CCCCEE";
 
         ctx.fillRect(56, 0, 8, 8);
         ctx.fillRect(56, 56, 8, 8);
         ctx.fillRect(0, 56, 8, 8);
         ctx.fillRect(0, 0, 8, 8);
 
-        if (!isOpen(this._openings, Direction.North)) {
+        if (!isOpen(this.openings, Direction.North)) {
             ctx.fillRect(8, 0, 48, 8);
         }
-        if (!isOpen(this._openings, Direction.East)) {
+        if (!isOpen(this.openings, Direction.East)) {
             ctx.fillRect(56, 8, 8, 48);
         }
-        if (!isOpen(this._openings, Direction.South)) {
+        if (!isOpen(this.openings, Direction.South)) {
             ctx.fillRect(8, 56, 48, 8);
         }
-        if (!isOpen(this._openings, Direction.West)) {
+        if (!isOpen(this.openings, Direction.West)) {
             ctx.fillRect(0, 8, 8, 48);
         }
-    } 
+    }
 
     static get all(): Tile[] {
         return buildTrivialTiles();

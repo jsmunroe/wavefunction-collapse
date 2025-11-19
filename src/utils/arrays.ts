@@ -8,6 +8,21 @@ export function create<TItem>(length: number, factory: (index: number) => TItem)
     return array;
 }
 
+export function range(max: number): number[];
+export function range(min: number, max: number): number[];
+export function range(min: number, max?: number): number[] {
+    if (max === undefined) {
+        max = min;
+        min = 0;
+    }
+
+    const result: number[] = [];
+    for (let i = min; i < max; i++) {
+        result.push(i);
+    }
+    return result;
+}
+
 export type Element2D<TItem> = {
     x: number;
     y: number;
