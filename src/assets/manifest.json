@@ -1,60 +1,60 @@
 {
     "sprites": [
         {
-            "name": "blob.bouncing",
-            "path": "/src/assets/sprites/blob/blob.bouncing.png"
-        },
-        {
-            "name": "blob",
-            "path": "/src/assets/sprites/blob/blob.png"
-        },
-        {
             "name": "flicker.floating.0",
-            "path": "/src/assets/sprites/flicker/flicker.floating.0.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/flicker/flicker.floating.0.png"
         },
         {
             "name": "flicker.floating.1",
-            "path": "/src/assets/sprites/flicker/flicker.floating.1.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/flicker/flicker.floating.1.png"
         },
         {
             "name": "flicker.floating.2",
-            "path": "/src/assets/sprites/flicker/flicker.floating.2.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/flicker/flicker.floating.2.png"
         },
         {
             "name": "flicker.floating.3",
-            "path": "/src/assets/sprites/flicker/flicker.floating.3.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/flicker/flicker.floating.3.png"
         },
         {
             "name": "flicker.floating.4",
-            "path": "/src/assets/sprites/flicker/flicker.floating.4.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/flicker/flicker.floating.4.png"
         },
         {
             "name": "flicker.floating.5",
-            "path": "/src/assets/sprites/flicker/flicker.floating.5.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/flicker/flicker.floating.5.png"
         },
         {
             "name": "flicker.floating.6",
-            "path": "/src/assets/sprites/flicker/flicker.floating.6.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/flicker/flicker.floating.6.png"
         },
         {
             "name": "flicker.floating.7",
-            "path": "/src/assets/sprites/flicker/flicker.floating.7.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/flicker/flicker.floating.7.png"
         },
         {
             "name": "flicker",
-            "path": "/src/assets/sprites/flicker/flicker.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/flicker/flicker.png"
         },
         {
             "name": "player",
-            "path": "/src/assets/sprites/player/player.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/player/player.png"
         },
         {
             "name": "player.walking.0",
-            "path": "/src/assets/sprites/player/player.walking.0.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/player/player.walking.0.png"
         },
         {
             "name": "player.walking.1",
-            "path": "/src/assets/sprites/player/player.walking.1.png"
+            "path": "/wavefunction-collapse/src/assets/sprites/player/player.walking.1.png"
+        },
+        {
+            "name": "blob.bouncing",
+            "path": "/wavefunction-collapse/src/assets/sprites/blob/blob.bouncing.png"
+        },
+        {
+            "name": "blob",
+            "path": "/wavefunction-collapse/src/assets/sprites/blob/blob.png"
         }
     ]
 }

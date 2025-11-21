@@ -16,7 +16,7 @@ const spritesDirectory = `${assetsDirectory}/sprites`;
         manifest['sprites'] = spriteFiles.map(filePath => {
             return {
                 name: path.basename(filePath, path.extname(filePath)),
-                path: `/src/assets/sprites/${filePath}`
+                path: `/wavefunction-collapse/src/assets/sprites/${filePath}`
             };
         });
 
