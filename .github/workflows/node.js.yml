@@ -1,0 +1,45 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # or your deployment branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'  # your node version
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build  # or your build command
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./dist  # or wherever your build output is
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy-pages.outputs.page_url }}
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write  # to authenticate the deployment
+
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deploy-pages
+      uses: actions/deploy-pages@v4
