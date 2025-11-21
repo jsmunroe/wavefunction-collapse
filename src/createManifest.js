@@ -2,11 +2,11 @@ import fs from 'fs';
 import fg from 'fast-glob';
 import * as path from 'path';
 
-const assetsDirectory = process.cwd();
+const currentWorkingDirectory = process.cwd();
 
 const manifest = {}
 
-const spritesDirectory = `${assetsDirectory}/sprites`;
+const spritesDirectory = `${currentWorkingDirectory}/../public/sprites`;
 
 (async () => {
 
@@ -16,13 +16,15 @@ const spritesDirectory = `${assetsDirectory}/sprites`;
         manifest['sprites'] = spriteFiles.map(filePath => {
             return {
                 name: path.basename(filePath, path.extname(filePath)),
-                path: `/wavefunction-collapse/src/assets/sprites/${filePath}`
+                path: `/wavefunction-collapse/sprites/${filePath}`
             };
         });
 
         const manifestJson = JSON.stringify(manifest, null, 4);
         fs.writeFile('manifest.json', manifestJson, (err) => {
-            
+            if (err) {
+                console.error('Error writing manifest file:', err);
+            }
         });
 
         console.log('Manifest created successfully.');

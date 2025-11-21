@@ -1,4 +1,4 @@
-import manifest from "../assets/manifest.json";
+import manifest from "../manifest.json";
 
 export default class Library {
 
