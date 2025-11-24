@@ -6,8 +6,8 @@ import Entity from "./Entity";
 
 export default class Blob extends Entity {
     constructor(game: Game, coordinates: Coordinates) {
-        super(game, 'blob', coordinates);
-        this.mover = new RandomMover(this.game, this, { stepDelay: 1000 });
+        super(game, 'blob', 1, coordinates);
+        this._mover = new RandomMover(this.game, this, { stepDelay: 1000 });
     }
 
     moveTo(direction: Direction, coordinates: Coordinates): Promise<void> {

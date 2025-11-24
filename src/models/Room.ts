@@ -2,12 +2,16 @@ import type ISprite from "../contracts/ISprite";
 import type { Openings } from "./Openings";
 import Tile from "./Tile";
 import type { Point2D } from "./World";
-import type { Element2D } from "../utils/arrays";
+import { equals } from "./Coordinates";
 
 export default class Room {
     private _coordinates: Point2D;
     private _tiles: Tile[][];
-    private _sprites: Element2D<ISprite[]>[] = [];
+    private _sprites: Set<ISprite> = new Set();
+
+    // Used for zooming and battle mode
+    private _zoomLevel: number = 1;
+    private _zoomTarget: Point2D | null = null;
 
     constructor(coordinates: Point2D, tiles: Tile[][]) {
         this._coordinates = coordinates;
@@ -27,7 +31,7 @@ export default class Room {
     }
 
     get sprites(): ISprite[] {
-        return this._sprites.flatMap(({item}) => item);
+        return Array.from(this._sprites);
     }
 
     get level(): number {
@@ -43,33 +47,23 @@ export default class Room {
     }
 
     addSprite(sprite: ISprite) {
-        const { room } = sprite.coordinates;
-
-        const existing = this._sprites.find(({item}) => item.includes(sprite));
-
-        if (existing) {
-            existing.item = existing.item.filter(s => s !== sprite);
+        if (this._sprites.has(sprite)) {
+            return;
         }
 
-        const sprites = this._sprites.find(({x, y}) => x === room.x && y === room.y);
-
-        if (!sprites) {
-            this._sprites.push({ x: room.x, y: room.y, item: [sprite] });
-        } else {
-            sprites.item.push(sprite);
-        }
+        this._sprites.add(sprite);
     }
 
     removeSprite(sprite: ISprite) {
-        const entry = this._sprites.find(({item}) => item.includes(sprite));
-        if (entry) {
-            entry.item = entry.item.filter(s => s !== sprite);
-        }
+        this._sprites.delete(sprite);
+    }
+
+    getSpritesAt(coord: Point2D): ISprite[] {
+        return [...this._sprites].filter(sprite => equals(sprite.coordinates.room, coord));
     }
 
     getMovableDirectionsFrom({x, y}: Point2D): Openings {
-        try {
-            const tile = this._tiles[y][x];
+        try {            const tile = this._tiles[y][x];
 
             return tile.openings;
         }
@@ -79,6 +73,14 @@ export default class Room {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
+        ctx.save();
+
+        if (this._zoomTarget) {
+            ctx.translate(this._zoomTarget.x + ctx.canvas.width / 2, this._zoomTarget.y + ctx.canvas.height / 2);
+        }
+
+        ctx.scale(this._zoomLevel, this._zoomLevel);
+
         for (let y = 0; y < this.height; y++) {
             for (let x = 0; x < this.width; x++) {
                 const tile = this._tiles[y][x];
@@ -89,18 +91,45 @@ export default class Room {
             }
         }
 
-        for (const {item: sprites} of this._sprites) {
-            for (const sprite of sprites) {
-                const { x, y } = sprite.coordinates.room;
-                ctx.save();
-                ctx.translate(x * 64, y * 64);
-                sprite.draw(ctx);
-                ctx.restore();
-            }
+        for (const sprite of this._sprites) {
+            const { x, y } = sprite.coordinates.room;
+            ctx.save();
+            ctx.translate(x * 64, y * 64);
+            sprite.draw(ctx);
+            ctx.restore();
         }
 
         ctx.font = "24px Arial";
         ctx.fillStyle = "#CCCCEE";
         ctx.fillText(`${this.level}`, 20, 30);
+
+        ctx.restore();
+    }
+
+    zoomIn(target: Point2D, zoomLevel = 5): Promise<void> {
+        return new Promise((resolve) => {
+                const zoomTarget = {
+                x: (target.x + 0.5) * 64 * zoomLevel / (zoomLevel - 1),
+                y: (target.y + 0.5) * 64 * zoomLevel / (zoomLevel - 1),
+            }
+
+            const animageZoom = (count: number) => {
+                this._zoomLevel = 1 + (zoomLevel - 1) * (count / 64);
+                console.log(this._zoomLevel);
+                this._zoomTarget = {
+                    x: zoomTarget.x * (1 - this._zoomLevel),
+                    y: zoomTarget.y * (1 - this._zoomLevel),
+                };
+
+                if (count < 64) {
+                    setTimeout(() => animageZoom(count + 1), 16);
+                }
+                else {
+                    resolve();
+                }
+            }
+
+            animageZoom(0);
+        });
     }
 }

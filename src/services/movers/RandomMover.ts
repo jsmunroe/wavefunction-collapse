@@ -1,4 +1,4 @@
-import type IMovableSprite from "../../contracts/IMovableSprite";
+import type Entity from "../../models/entities/Entity";
 import type { Game } from "../../models/Game";
 import { Direction } from "../../models/Openings";
 import { select } from "../../utils/random";
@@ -9,11 +9,16 @@ export type RandomMoverOptions = {
 }
 
 export default class RandomMover extends Mover {
-    constructor(game: Game, entity: IMovableSprite, options: RandomMoverOptions = {}) {
+    constructor(game: Game, entity: Entity, options: RandomMoverOptions = {}) {
         super(game, entity, options);
     }
 
-    update(): void {
+    protected move(): void {
+        if (this.currentBattle) {
+            this.battle();
+            return;
+        }
+
         if (this.isDelaying) {
             return;
         }
@@ -51,6 +56,16 @@ export default class RandomMover extends Mover {
 
         this.entity.moveTo(direction, coordinates)
             .then(() => this.endMove());
+    }
+
+    protected battle(): void {
+        if (!this.currentBattle) {
+            return;
+        }
+
+        const opponentDirection = this.currentBattle?.opponentDirection(this.entity);
+        
+        this.currentBattle.act(this.entity, opponentDirection);
     }
 
 }

@@ -1,6 +1,7 @@
 import type IMovableSprite from "../../contracts/IMovableSprite";
 import type Mover from "../../services/movers/Mover";
 import RandomMover from "../../services/movers/RandomMover";
+import Battle from "../Battle";
 import type { Coordinates } from "../Coordinates";
 import type { Game } from "../Game";
 import { Direction } from "../Openings";
@@ -32,11 +33,13 @@ export default abstract class Entity implements IMovableSprite {
     protected standingSprite;
     protected sprite;
 
+    protected _faction: number;
+
     protected _coordinates: Coordinates;
 
     protected _currentRoom: Room;
 
-    protected mover: Mover;
+    protected _mover: Mover;
 
     protected moving: Point2D = { x: 1, y: 1 };
     protected facing: number = 1;
@@ -50,16 +53,20 @@ export default abstract class Entity implements IMovableSprite {
     protected offset: Point2D = { x: 0, y: 0 };
     protected offsetZ: number = 0;
 
-    constructor(game: Game, sprite: string, coordinates: Coordinates, options: EntityOptions = {}) {
+    protected _currentBattle: Battle | null = null;
+
+    constructor(game: Game, sprite: string, faction: number, coordinates: Coordinates, options: EntityOptions = {}) {
         this.game = game;
         this.world = game.world;
         this._coordinates = coordinates;
         this._currentRoom = this.world.getRoom(this.coordinates.world);
         this._currentRoom.addSprite(this);
 
-        this.mover = new RandomMover(this.game, this);
+        this._mover = new RandomMover(this.game, this);
 
         this.sprite = this.standingSprite = sprite;
+
+        this._faction = faction;
 
         this.facingDirections = options.facingDirections ?? this.facingDirections;
         this.animationFrameCount = options.animationFrameCount ?? this.animationFrameCount;
@@ -82,10 +89,22 @@ export default abstract class Entity implements IMovableSprite {
         return this._isMoving;
     }
 
+    get faction(): number {
+        return this._faction;
+    }
+
+    get mover(): Mover {
+        return this._mover;
+    }
+
+    get currentBattle(): Battle | null {
+        return this._currentBattle;
+    }
+
     abstract moveTo(direction: Direction, coordinates: Coordinates): Promise<void>;
 
     update(): void {
-        this.mover.update();
+        this._mover.update();
     }
 
     draw(ctx: CanvasRenderingContext2D): void {
@@ -99,6 +118,7 @@ export default abstract class Entity implements IMovableSprite {
         ctx.translate(this.offset.x, this.offset.y + this.offsetZ);
         ctx.scale(this.facing, 1);
 
+        ctx.imageSmoothingEnabled = false;
         ctx.beginPath();
         const image = this.game.library.getImage(this.sprite);
         if (image) {
@@ -117,6 +137,16 @@ export default abstract class Entity implements IMovableSprite {
 
         this._currentRoom = this.world.getRoom(this.coordinates.world);
         this._currentRoom.addSprite(this);
+    }
+
+    startBattle(battle: Battle): void {
+        this._currentBattle = battle;
+        this._mover.startBattle(battle);
+    }
+
+    clearBattle(): void {
+        this._currentBattle = null;
+        this._mover.clearBattle();
     }
 
     protected updateFrame(frame: number): string | null {
@@ -151,6 +181,17 @@ export default abstract class Entity implements IMovableSprite {
 
             animate(frameCount);
         })
+    }
+
+    protected async battle(coordinates: Coordinates): Promise<void> {
+        const currentBattle = new Battle(this.currentRoom, this.coordinates, coordinates);
+
+        const battleCoordinates = {
+            x: (currentBattle.side1.x + currentBattle.side2.x) / 2,
+            y: (currentBattle.side1.y + currentBattle.side2.y) / 2,
+        };
+
+        await this.currentRoom.zoomIn(battleCoordinates);
     }
 
     protected computeFacingAndMoving(direction: Direction) {

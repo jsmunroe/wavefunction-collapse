@@ -6,12 +6,12 @@ import Entity, { FacingDirections } from "./Entity";
 
 export default class Flicker extends Entity {
     constructor(game: Game, coordinates: Coordinates) {
-        super(game, 'flicker', coordinates, {
+        super(game, 'flicker', 1, coordinates, {
             facingDirections: FacingDirections.None,
             animationFrameCount: 8,
             animationSpeed: 4,
         });
-        this.mover = new FollowWallMover(this.game, this, { stepDelay: 500 });
+        this._mover = new FollowWallMover(this.game, this, { stepDelay: 500 });
     }
 
     protected updateFrame(frame: number): string {

@@ -7,11 +7,13 @@ export default function RoomView() {
     const room = game.player.currentRoom;
 
     return (
-        <canvas
-            width={room.width * 64}
-            height={room.height * 64}
-            ref={(canvas) => drawRoom(canvas, game)}
-        />
+        <div className="room-view">
+            <canvas
+                width={room.width * 64}
+                height={room.height * 64}
+                ref={(canvas) => drawRoom(canvas, game)}
+            />
+        </div>
     );
 }
 

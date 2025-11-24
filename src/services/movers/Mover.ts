@@ -1,5 +1,6 @@
-import type IMovableSprite from "../../contracts/IMovableSprite";
+import type Battle from "../../models/Battle";
 import type { Coordinates } from "../../models/Coordinates";
+import type Entity from "../../models/entities/Entity";
 import type { Game } from "../../models/Game";
 import { Direction } from "../../models/Openings";
 import { select } from "../../utils/random";
@@ -10,18 +11,32 @@ export type MoverOptions = {
 
 export default abstract class Mover {
     protected game: Game;
-    protected entity: IMovableSprite;
+    protected entity: Entity;
 
     protected stepDelay: number = 500;
     protected isDelaying: boolean = false;
 
-    constructor(game: Game, entity: IMovableSprite, options: MoverOptions = {}) {
+    protected currentBattle: Battle | null = null;
+
+    constructor(game: Game, entity: Entity, options: MoverOptions = {}) {
         this.game = game;
         this.entity = entity;
         this.stepDelay = options.stepDelay ?? this.stepDelay;
     }
 
-    abstract update(): void;
+    update() {
+        this.move();
+    }
+
+    startBattle(battle: Battle): void {
+        this.currentBattle = battle;
+    }
+
+    clearBattle(): void {
+        this.currentBattle = null;
+    }
+
+    protected abstract move(): void;
 
     protected endMove(): void {
         if (this.isDelaying || this.stepDelay <= 0) {

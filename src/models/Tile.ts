@@ -20,11 +20,6 @@ export default class Tile {
     draw(ctx: CanvasRenderingContext2D) {
         ctx.clearRect(0, 0, 64, 64);
 
-        // if (this.section >= 0) {
-        //     ctx.fillStyle = `hsl(${(this.section * 23) % 360}, 50%, 20%)`;
-        //     ctx.fillRect(0, 0, 64, 64);
-        // }
-
         ctx.fillStyle = "#CCCCEE";
 
         ctx.fillRect(56, 0, 8, 8);

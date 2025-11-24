@@ -1,5 +1,5 @@
-import Library from "./Library";
-import Player from "./Player";
+import Library from "../services/Library";
+import Player from "./entities/Player";
 import World from "./World";
 
 export class Game {

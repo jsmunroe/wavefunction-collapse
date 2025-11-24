@@ -1,4 +1,4 @@
-import type IMovableSprite from "../../contracts/IMovableSprite";
+import type Entity from "../../models/entities/Entity";
 import type { Game } from "../../models/Game";
 import { Direction } from "../../models/Openings";
 import { wrapWeakHandler } from "../../utils/weak";
@@ -12,25 +12,50 @@ export default class KeyboardMover extends Mover {
 
     private _keysDown: Set<string> = new Set();
 
-    constructor(game: Game, entity: IMovableSprite) {
+    constructor(game: Game, entity: Entity) {
         super(game, entity);
 
         this.bindEvents();
     }
 
-    update(): void { 
+    protected move(): void {
+        if (this.currentBattle) {
+            this.battle();
+            return;
+        }
+
         if (this._keysDown.has("ArrowUp") || this._keysDown.has("w")) {
-            this.move(Direction.North);
+            this.moveInDirection(Direction.North);
         }
         else if (this._keysDown.has("ArrowRight") || this._keysDown.has("d")) {
-            this.move(Direction.East);
+            this.moveInDirection(Direction.East);
         }
         else if (this._keysDown.has("ArrowDown") || this._keysDown.has("s")) {
-            this.move(Direction.South);
+            this.moveInDirection(Direction.South);
         }
         else if (this._keysDown.has("ArrowLeft") || this._keysDown.has("a")) {
-            this.move(Direction.West);
+            this.moveInDirection(Direction.West);
         }
+    }
+
+    protected battle(): void {
+        if (!this.currentBattle) {
+            return;
+        }
+
+        if (this._keysDown.has("ArrowUp") || this._keysDown.has("w")) {
+            this.currentBattle.act(this.entity, Direction.North);
+        }
+        else if (this._keysDown.has("ArrowRight") || this._keysDown.has("d")) {
+            this.currentBattle.act(this.entity, Direction.East);
+        }
+        else if (this._keysDown.has("ArrowDown") || this._keysDown.has("s")) {
+            this.currentBattle.act(this.entity, Direction.South);
+        }
+        else if (this._keysDown.has("ArrowLeft") || this._keysDown.has("a")) {
+            this.currentBattle.act(this.entity, Direction.West);
+        }
+
     }
 
     private bindEvents(): void {
@@ -51,7 +76,7 @@ export default class KeyboardMover extends Mover {
         this._keysDown.delete(event.key);
     };
 
-    private move(direction: Direction): void {
+    private moveInDirection(direction: Direction): void {
         const currentRoom = this.game.world.getRoom(this.entity.coordinates.world);
 
         let { world } = this.entity.coordinates;
