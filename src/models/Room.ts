@@ -3,6 +3,7 @@ import type { Openings } from "./Openings";
 import Tile from "./Tile";
 import type { Point2D } from "./World";
 import { equals } from "./Coordinates";
+import { lerp, lerpPoint2D } from "../utils/math";
 
 export default class Room {
     private _coordinates: Point2D;
@@ -11,7 +12,7 @@ export default class Room {
 
     // Used for zooming and battle mode
     private _zoomLevel: number = 1;
-    private _zoomTarget: Point2D | null = null;
+    private _zoomTarget: Point2D = { x: 0, y: 0 };
 
     constructor(coordinates: Point2D, tiles: Tile[][]) {
         this._coordinates = coordinates;
@@ -76,7 +77,7 @@ export default class Room {
         ctx.save();
 
         if (this._zoomTarget) {
-            ctx.translate(this._zoomTarget.x + ctx.canvas.width / 2, this._zoomTarget.y + ctx.canvas.height / 2);
+            ctx.translate(this._zoomTarget.x, this._zoomTarget.y);
         }
 
         ctx.scale(this._zoomLevel, this._zoomLevel);
@@ -108,28 +109,51 @@ export default class Room {
 
     zoomIn(target: Point2D, zoomLevel = 5): Promise<void> {
         return new Promise((resolve) => {
-                const zoomTarget = {
-                x: (target.x + 0.5) * 64 * zoomLevel / (zoomLevel - 1),
-                y: (target.y + 0.5) * 64 * zoomLevel / (zoomLevel - 1),
+            const initialZoomTarget = {... this._zoomTarget };
+            const zoomTarget = {
+                x: -(target.x - 0.5) * 64 * zoomLevel,
+                y: -(target.y - 0.5) * 64 * zoomLevel,
             }
 
-            const animageZoom = (count: number) => {
-                this._zoomLevel = 1 + (zoomLevel - 1) * (count / 64);
-                console.log(this._zoomLevel);
-                this._zoomTarget = {
-                    x: zoomTarget.x * (1 - this._zoomLevel),
-                    y: zoomTarget.y * (1 - this._zoomLevel),
-                };
+            const initialZoomLevel = this._zoomLevel;
+
+            const animateZoom = (count: number) => {
+                this._zoomLevel = lerp(initialZoomLevel, zoomLevel, (count / 64));
+                this._zoomTarget = lerpPoint2D(initialZoomTarget, zoomTarget, (count / 64));
 
                 if (count < 64) {
-                    setTimeout(() => animageZoom(count + 1), 16);
+                    setTimeout(() => animateZoom(count + 1), 16);
                 }
                 else {
                     resolve();
                 }
             }
 
-            animageZoom(0);
+            animateZoom(0);
+        });
+    }
+
+    zoomOut(): Promise<void> {
+        return new Promise((resolve) => {
+            const initialZoomTarget = this._zoomTarget;
+            const zoomTarget = { x: 0, y: 0 };
+
+            const initialZoomLevel = this._zoomLevel;
+            const zoomLevel = 1;
+            
+            const animateZoom = (count: number) => {
+                this._zoomLevel = lerp(initialZoomLevel, zoomLevel, (count / 64));
+                this._zoomTarget = lerpPoint2D(initialZoomTarget, zoomTarget, (count / 64));
+
+                if (count < 64) {
+                    setTimeout(() => animateZoom(count + 1), 16);
+                }
+                else {
+                    resolve();
+                }
+            }
+
+            animateZoom(0);
         });
     }
 }

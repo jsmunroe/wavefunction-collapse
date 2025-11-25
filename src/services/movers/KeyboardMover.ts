@@ -43,6 +43,10 @@ export default class KeyboardMover extends Mover {
             return;
         }
 
+        if (this.entity.timeToNextAction > 0) {
+            return;
+        }
+
         if (this._keysDown.has("ArrowUp") || this._keysDown.has("w")) {
             this.currentBattle.act(this.entity, Direction.North);
         }

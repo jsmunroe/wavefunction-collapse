@@ -55,6 +55,11 @@ export default abstract class Entity implements IMovableSprite {
 
     protected _currentBattle: Battle | null = null;
 
+    level: number = 1;
+
+    hp: number = 1;
+    timeToNextAction: number = 1;
+
     constructor(game: Game, sprite: string, faction: number, coordinates: Coordinates, options: EntityOptions = {}) {
         this.game = game;
         this.world = game.world;
@@ -103,6 +108,10 @@ export default abstract class Entity implements IMovableSprite {
 
     abstract moveTo(direction: Direction, coordinates: Coordinates): Promise<void>;
 
+    attack(direction: Direction): Promise<void> {
+        return this.animateAttack(direction);
+    }
+
     update(): void {
         this._mover.update();
     }
@@ -127,6 +136,18 @@ export default abstract class Entity implements IMovableSprite {
         ctx.stroke();
 
         ctx.restore();
+
+        if (this.currentBattle) {
+            ctx.fillStyle = "red";
+            ctx.fillRect(16, 46, 32, 2);
+            ctx.fillStyle = "green";
+            ctx.fillRect(16, 46, 32 * this.hp, 2);
+
+            ctx.fillStyle = "blue";
+            ctx.fillRect(16, 48, 32, 2);
+            ctx.fillStyle = "white";
+            ctx.fillRect(16, 48, 32 * (1 - this.timeToNextAction), 2);
+        }
     }
 
     setCurrentRoom(x: number, y: number) {
@@ -141,6 +162,7 @@ export default abstract class Entity implements IMovableSprite {
 
     startBattle(battle: Battle): void {
         this._currentBattle = battle;
+        this.timeToNextAction = 1;
         this._mover.startBattle(battle);
     }
 
@@ -181,6 +203,54 @@ export default abstract class Entity implements IMovableSprite {
 
             animate(frameCount);
         })
+    }
+
+    protected animateAttack(direction: Direction): Promise<void> {
+        const unitVector = { x: 0, y: 0 };
+        if (direction === Direction.North) {
+            unitVector.y = -1;  
+        }
+        else if (direction === Direction.South) {
+            unitVector.y = 1;  
+        }
+        else if (direction === Direction.West) {
+            unitVector.x = -1;  
+        }
+        else if (direction === Direction.East) {
+            unitVector.x = 1;  
+        }
+
+        return new Promise((resolve) => {
+            const attack = (count: number) => {
+                const factor = (1 - count / 16) ** 2;
+
+                this.offset.x = unitVector.x * factor * 32;
+                this.offset.y = unitVector.y * factor * 32;
+
+                if (count >= 0) {
+                    setTimeout(() => attack(count - 1), 16);
+                }
+                else {
+                    recoil(16);
+                }
+            }
+
+            const recoil = (count: number) => {
+                const factor = (count / 16) ** 2;
+
+                this.offset.x = unitVector.x * factor * 32;
+                this.offset.y = unitVector.y * factor * 32; 
+
+                if (count >= 0) {
+                    setTimeout(() => recoil(count - 1), 16);
+                }
+                else {
+                    resolve();
+                }
+            }
+
+            attack(16);
+        });
     }
 
     protected async battle(coordinates: Coordinates): Promise<void> {

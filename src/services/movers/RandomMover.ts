@@ -2,13 +2,14 @@ import type Entity from "../../models/entities/Entity";
 import type { Game } from "../../models/Game";
 import { Direction } from "../../models/Openings";
 import { select } from "../../utils/random";
+import AiMover from "./AiMover";
 import Mover from "./Mover";
 
 export type RandomMoverOptions = {
     stepDelay?: number;
 }
 
-export default class RandomMover extends Mover {
+export default class RandomMover extends AiMover {
     constructor(game: Game, entity: Entity, options: RandomMoverOptions = {}) {
         super(game, entity, options);
     }
@@ -57,15 +58,4 @@ export default class RandomMover extends Mover {
         this.entity.moveTo(direction, coordinates)
             .then(() => this.endMove());
     }
-
-    protected battle(): void {
-        if (!this.currentBattle) {
-            return;
-        }
-
-        const opponentDirection = this.currentBattle?.opponentDirection(this.entity);
-        
-        this.currentBattle.act(this.entity, opponentDirection);
-    }
-
 }

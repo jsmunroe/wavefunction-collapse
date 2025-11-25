@@ -1,13 +1,14 @@
 import type Entity from "../../models/entities/Entity";
 import type { Game } from "../../models/Game";
 import { Direction, left, reverse, right } from "../../models/Openings";
+import AiMover from "./AiMover";
 import Mover from "./Mover";
 
 export type FollowWallMoverOptions = {
     stepDelay?: number;
 }
 
-export default class FollowWallMover extends Mover {
+export default class FollowWallMover extends AiMover {
     private _lastDirection: Direction | null = null;
 
     constructor(game: Game, entity: Entity, options: FollowWallMoverOptions = {}) {
@@ -57,15 +58,5 @@ export default class FollowWallMover extends Mover {
 
 
         return validDirections.shift()!;
-    }
-    
-    protected battle(): void {
-        if (!this.currentBattle) {
-            return;
-        }
-
-        const opponentDirection = this.currentBattle?.opponentDirection(this.entity);
-        
-        this.currentBattle.act(this.entity, opponentDirection);
     }
 }

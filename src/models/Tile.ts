@@ -39,6 +39,8 @@ export default class Tile {
         if (!isOpen(this.openings, Direction.West)) {
             ctx.fillRect(0, 8, 8, 48);
         }
+
+        ctx.strokeRect(0, 0, 64, 64);
     }
 
     static get all(): Tile[] {
