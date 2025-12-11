@@ -1,4 +1,3 @@
-import { select } from "../utils/random";
 import type { Coordinates } from "./Coordinates";
 import Entity from "./entities/Entity";
 import { Direction } from "./Openings";
@@ -100,20 +99,20 @@ export default class Battle {
     }
 
     protected attack(attacker: Side, defender: Side): void {
-        const attackingEntity = select(attacker.entities.filter(e => e.hp > 0 && e.timeToNextAction <= 0));
-        const defendingEntity = select(defender.entities.filter(e => e.hp > 0));
+        const attackingEntity = this._room.random.select(attacker.entities.filter(e => e.hp > 0 && e.timeToNextAction <= 0));
+        const defendingEntity = this._room.random.select(defender.entities.filter(e => e.hp > 0));
 
         if (!attackingEntity || !defendingEntity) {
             return;
         }
 
-        const power = attackingEntity.level / defendingEntity.level / 5.0 * (Math.random() * 2);
+        const power = attackingEntity.level / defendingEntity.level / 5.0 * (this._room.random.next() * 2);
         defendingEntity.hp = Math.max(0, defendingEntity.hp - power);
 
         if (defendingEntity.hp <= 0) {
             console.log(`${defendingEntity.constructor.name} has been defeated!`);
             defender.entities = defender.entities.filter(e => e !== defendingEntity);
-            defendingEntity.currentRoom.removeSprite(defendingEntity);
+            defendingEntity.currentRoom?.removeSprite(defendingEntity);
             defendingEntity.clearBattle();
         }
 

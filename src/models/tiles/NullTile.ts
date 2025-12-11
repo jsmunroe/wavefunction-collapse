@@ -1,14 +1,14 @@
-import type IRoomContext from "../../contracts/IRoomContext";
+import type IGameContext from "../../contracts/IRoomContext";
 import { north, east, south, west, type Coordinates } from "../Coordinates";
 import { Direction } from "../Openings";
 import type World from "../World";
 import Tile from "./Tile";
 
 export default class NullTile extends Tile {
-    roomContext: IRoomContext;
+    roomContext: IGameContext;
     coordinates?: Coordinates;
 
-    constructor(roomContext: IRoomContext, coordinates?: Coordinates) {
+    constructor(roomContext: IGameContext, coordinates?: Coordinates) {
         super(0);
 
         this.roomContext = roomContext;

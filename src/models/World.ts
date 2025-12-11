@@ -1,6 +1,6 @@
-import type IRoomContext from "../contracts/IRoomContext";
+import type IGameContext from "../contracts/IRoomContext";
 import { TileGridBuilder } from "../services/builders/TileGridBuilder";
-import { randomCoordinate, select } from "../utils/random";
+import { RandomSource } from "../utils/random";
 import type { Coordinates } from "./Coordinates";
 import Blob from "./entities/Blob";
 import type Entity from "./entities/Entity";
@@ -17,17 +17,23 @@ export type Point2D = {
 export const roomWidth = 10;
 export const roomHeight = 10;
 
-export default class World implements IRoomContext {
+export default class World implements IGameContext {
     private _game: Game;
+    private _random: RandomSource;
     private _rooms: Map<string, Room> = new Map<string, Room>();
     private _tileGridBuilder: TileGridBuilder | null = null;
 
     constructor(game: Game) {
         this._game = game;
+        this._random = game.random;
     }
 
     get game(): Game {
         return this._game;
+    }
+
+    get random(): RandomSource {
+        return this._random;
     }
 
     getRoom({ x, y }: Point2D): Room {
@@ -86,9 +92,9 @@ export default class World implements IRoomContext {
         }
 
         const tileGrid = this._tileGridBuilder.randomize({ x, y });
-        //this._tileGridBuilder.removeIsolatedSections(tileGrid);
-        
-        const room = new Room({x, y}, tileGrid.tiles);
+        this._tileGridBuilder.removeOrphanCorners(tileGrid);
+
+        const room = new Room(this, {x, y}, tileGrid.tiles);
         this._rooms.set(JSON.stringify({ x, y }), room);
         
         for (const entity of this.createEntities({ x, y })) {
@@ -104,9 +110,9 @@ export default class World implements IRoomContext {
 
         const entities: Entity[] = [];
 
-        const entityCount = Math.ceil(Math.random() * room.level);
+        const entityCount = Math.ceil(this.random.next() * room.level);
 
-        const coordInit = randomCoordinate(0, room.width - 1, 0, room.height - 1);
+        const coordInit = this.random.randomCoordinate(0, room.width - 1, 0, room.height - 1);
 
         const entityInits = [
             () => new Blob(this._game, { world: { x, y }, room: coordInit() }),
@@ -114,7 +120,7 @@ export default class World implements IRoomContext {
         ];
 
         for (let i = 0; i < entityCount; i++) {
-            const entity = select(entityInits)();
+            const entity = this.game.random.select(entityInits)();
         
             entities.push(entity);
         }

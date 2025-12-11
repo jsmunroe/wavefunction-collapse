@@ -21,7 +21,7 @@ export default class ImageTile extends Tile {
         north: number[], east: number[], south: number[], west: number[], 
         northEast: boolean, southEast: boolean, northWest: boolean, southWest: boolean,
         openings: Openings) {
-        super(openings);
+        super(name, openings);
 
         this._image = image;
         

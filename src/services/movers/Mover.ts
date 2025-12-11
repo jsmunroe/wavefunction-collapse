@@ -3,7 +3,7 @@ import type { Coordinates } from "../../models/Coordinates";
 import type Entity from "../../models/entities/Entity";
 import type { Game } from "../../models/Game";
 import { Direction } from "../../models/Openings";
-import { select } from "../../utils/random";
+import type { RandomSource } from "../../utils/random";
 
 export type MoverOptions = {
     stepDelay?: number;
@@ -11,6 +11,7 @@ export type MoverOptions = {
 
 export default abstract class Mover {
     protected game: Game;
+    protected random: RandomSource;
     protected entity: Entity;
 
     protected stepDelay: number = 500;
@@ -20,6 +21,7 @@ export default abstract class Mover {
 
     constructor(game: Game, entity: Entity, options: MoverOptions = {}) {
         this.game = game;
+        this.random = game.random;
         this.entity = entity;
         this.stepDelay = options.stepDelay ?? this.stepDelay;
     }
@@ -138,6 +140,6 @@ export default abstract class Mover {
             return null;
         }
 
-        return select(validDirections);
+        return this.random.select(validDirections);
     }
 }

@@ -4,47 +4,47 @@ import Tile from "./tiles/Tile";
 import type { Point2D } from "./World";
 import { equals } from "./Coordinates";
 import { lerp, lerpPoint2D } from "../utils/math";
+import type World from "./World";
+import type { RandomSource } from "../utils/random";
 
 export default class Room {
-    private _coordinates: Point2D;
-    private _tiles: Tile[][];
-    private _sprites: Set<ISprite> = new Set();
+    readonly world: World;
+
+    readonly random: RandomSource;
+
+    readonly coordinates: Point2D;
+    readonly tiles: Tile[][];
+    readonly sprites: Set<ISprite> = new Set();
 
     // Used for zooming and battle mode
     private _zoomLevel: number = 1;
     private _zoomTarget: Point2D = { x: 0, y: 0 };
 
-    constructor(coordinates: Point2D, tiles: Tile[][]) {
-        this._coordinates = coordinates;
-        this._tiles = tiles;
+    constructor(world: World, coordinates: Point2D, tiles: Tile[][]) {
+        this.world = world;
+        this.random = world.random;
+        this.coordinates = coordinates;
+        this.tiles = tiles;
     }
 
     get width(): number {
-        return this._tiles[0].length;
+        return this.tiles[0].length;
     }
 
     get height(): number {
-        return this._tiles.length;
-    }
-
-    get tiles(): Tile[][] {
-        return [...this._tiles.map(row => [...row])];
-    }
-
-    get sprites(): ISprite[] {
-        return Array.from(this._sprites);
+        return this.tiles.length;
     }
 
     get level(): number {
-        return Math.ceil( Math.sqrt(this._coordinates.x ** 2 + this._coordinates.y ** 2)) + 1;
+        return Math.ceil( Math.sqrt(this.coordinates.x ** 2 + this.coordinates.y ** 2)) + 1;
     }
 
     get x(): number {
-        return this._coordinates.x;
+        return this.coordinates.x;
     }
 
     get y(): number {
-        return this._coordinates.y;
+        return this.coordinates.y;
     }
 
     getTile({x, y}: Point2D): Tile | null {
@@ -52,27 +52,27 @@ export default class Room {
             return null;
         }
 
-        return this._tiles[y][x];
+        return this.tiles[y][x];
     }
 
     addSprite(sprite: ISprite) {
-        if (this._sprites.has(sprite)) {
+        if (this.sprites.has(sprite)) {
             return;
         }
 
-        this._sprites.add(sprite);
+        this.sprites.add(sprite);
     }
 
     removeSprite(sprite: ISprite) {
-        this._sprites.delete(sprite);
+        this.sprites.delete(sprite);
     }
 
     getSpritesAt(coord: Point2D): ISprite[] {
-        return [...this._sprites].filter(sprite => equals(sprite.coordinates.room, coord));
+        return [...this.sprites].filter(sprite => equals(sprite.coordinates.room, coord));
     }
 
     getMovableDirectionsFrom({x, y}: Point2D): Openings {
-        try {            const tile = this._tiles[y][x];
+        try {            const tile = this.tiles[y][x];
 
             return tile.openings;
         }
@@ -92,7 +92,7 @@ export default class Room {
 
         for (let y = 0; y < this.height; y++) {
             for (let x = 0; x < this.width; x++) {
-                const tile = this._tiles[y][x];
+                const tile = this.tiles[y][x];
                 ctx.save();
                 ctx.translate(x * 64, y * 64);
                 tile?.draw(ctx);
@@ -100,7 +100,7 @@ export default class Room {
             }
         }
 
-        for (const sprite of this._sprites) {
+        for (const sprite of this.sprites) {
             const { x, y } = sprite.coordinates.room;
             ctx.save();
             ctx.translate(x * 64, y * 64);

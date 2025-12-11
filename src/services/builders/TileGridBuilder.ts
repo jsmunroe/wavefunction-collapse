@@ -1,10 +1,10 @@
 import { equal, type Element2D } from "../../utils/arrays";
-import { select } from "../../utils/random";
 import { Direction, getDirectionFromCoords, reverse } from "../../models/Openings";
 import TileGrid from "./TileGrid";
-import type IRoomContext from "../../contracts/IRoomContext";
+import type IGameContext from "../../contracts/IRoomContext";
 import type { Point2D } from "../../models/World";
 import type Tile from "../../models/tiles/Tile";
+import type World from "../../models/World";
 
 export type Neighbor2D<TItem> = Element2D<TItem> & { direction: Direction };
 
@@ -12,18 +12,18 @@ export class TileGridBuilder {
     width: number;
     height: number;
 
-    private _roomContext: IRoomContext;
-    private _tiles: Tile[]; 
+    readonly world: World;
+    readonly tiles: Tile[]; 
 
-    constructor(width: number, height: number, roomContext: IRoomContext, tiles: Tile[]) {
+    constructor(width: number, height: number, world: World, tiles: Tile[]) {
         this.width = width;
         this.height = height;
-        this._roomContext = roomContext;
-        this._tiles = tiles;
+        this.world = world;
+        this.tiles = tiles;
     }
 
     randomize(world: Point2D): TileGrid {
-        const tilesGrid = new TileGrid(world, this.width, this.height, this._roomContext, [...this._tiles]);
+        const tilesGrid = new TileGrid(world, this.width, this.height, this.world, [...this.tiles]);
         /* * /
 
         tilesGrid.modifyTilesAt(1, 0, () => [tiles.find(t => (t as ImageTile).walls === "0111") ?? new NullTile(this._roomContext, { world, room: { x: 0, y: 0 } })]);
@@ -51,8 +51,8 @@ export class TileGridBuilder {
             this.applyConstraintsToNeighbors(tilesGrid, x, this.height);
         }
 
-        const startX = Math.floor(Math.random() * this.width);
-        const startY = Math.floor(Math.random() * this.height);
+        const startX = Math.floor(this.world.random.next() * this.width);
+        const startY = Math.floor(this.world.random.next() * this.height);
 
         this.propagateConstraints(tilesGrid, startX, startY);
 
@@ -61,157 +61,44 @@ export class TileGridBuilder {
         //*/
     }
 
-    removeIsolatedSections(tileGrid: TileGrid): void {
-        let currentSection = 0;
+    removeOrphanCorners(tileGrid: TileGrid) {
+        const hasCorner = (tile: Tile, corner: string) => {
+            const rexCorner = new RegExp(`^\\w+_\\d+[abcd]*(?<corner>${corner})`);
+            return rexCorner.test(tile.name);
+        }
 
-        let allTiles = tileGrid.allTiles;
+        const removeCorner = (tile: Tile, corner: string) => {
+            const rexName = /^(?<rest>\w+_\d+)(?<corners>[abcd]*)$/;
 
-        const tileStack: Element2D<Tile>[] = [];
-        
-        const sections: Element2D<Tile>[][] = [[]];
-
-        while (allTiles.length > 0) {
-            const element = allTiles.shift();
-
-            if (!element?.item || element.item.section >= 0) {
-                continue;
+            const match = tile.name.match(rexName);
+            if (!match?.groups) {
+                return tile;
             }
 
-            tileStack.push(element);
+            const { rest, corners } = match.groups;
 
-            while (tileStack.length > 0) {
-                const current = tileStack.pop();
+            const newCorners = corners.replace(corner, '');
+            const newName = `${rest}${newCorners}`;
 
-                if (!current) {
-                    continue;
-                }
+            const newTile = this.tiles.find(t => t.name === newName) ?? tile;
 
-                const { item: tile, x, y } = current;
-
-                if (!tile) {
-                    continue;
-                }
-
-                tile.section = currentSection;
-                sections[currentSection].push(current);
-                
-                const openNeighbors = this.getOpenNeighbors(tileGrid, { x, y }).filter(n => n.item?.section < 0);
-
-                tileStack.push(...openNeighbors);
-            }
-
-            allTiles = allTiles.filter(tile => tile.item?.section < 0);
-            currentSection++;
-            sections.push([]);
+            return newTile;
         }
 
-        for (const section of sections) {
-            for (const element of section) {
-                const { x, y, item: tile } = element;
+        for (let y = 0; y < this.height - 1; y++) {
+        for (let x = 0; x < this.width - 1; x++) {
+            const hasA = hasCorner(tileGrid.tiles[y+1][x], 'a');
+            const hasB = hasCorner(tileGrid.tiles[y][x], 'b');
+            const hasC = hasCorner(tileGrid.tiles[y][x+1], 'c');
+            const hasD = hasCorner(tileGrid.tiles[y+1][x+1], 'd');
 
-                const closedNeighbors = this.getClosedNeighbors(tileGrid, { x, y });
-
-                for (const neighbor of closedNeighbors) {
-                    const { x: nx, y: ny, item: neighborTile, direction } = neighbor;
-
-                    if (tile.section === neighborTile.section) {
-                        continue;
-                    }
-
-                    if (this.openTileInDirection(tileGrid, {x, y}, direction)) {
-                        sections[neighborTile.section].forEach(e => e.item.section = tile.section);
-                    }
-                }
-            }
-        }
-    }
-
-    private openTileInDirection(tileGrid: TileGrid, room: Point2D, direction: Direction) {
-
-        const workingGrid = tileGrid.clone();
-
-        let tiles = this._tiles.filter(tile => tile.openings & direction);
-
-        if (direction !== Direction.North) {
-            const neighbor = workingGrid.getTilesAt(room.x, room.y - 1);
-            if (neighbor != null) {
-                tiles = this.filterTiles(neighbor, Direction.South, tiles);
-            }
-        }
-
-        if (direction != Direction.East) {
-            const neighbor = workingGrid.getTilesAt(room.x + 1, room.y);
-            if (neighbor != null) {
-                tiles = this.filterTiles(neighbor, Direction.West, tiles);
-            }
-        }
-
-        if (direction !== Direction.South) {
-            const neighbor = workingGrid.getTilesAt(room.x, room.y + 1);
-            if (neighbor != null) {
-                tiles = this.filterTiles(neighbor, Direction.North, tiles);
-            }
-        }
-
-        if (direction !== Direction.West) {
-            const neighbor = workingGrid.getTilesAt(room.x - 1, room.y);
-            if (neighbor != null) {
-                tiles = this.filterTiles(neighbor, Direction.East, tiles);
-            }
-        }
-
-        const thisTile = select(tiles);
-
-        tiles = this._tiles.filter(tile => tile.openings & direction);
-
-        let neighborCoords: Point2D | null = null;
-
-        switch (direction) {
-            case Direction.North:
-                neighborCoords = { x: room.x, y: room.y - 1 };
-                break;
-            case Direction.East:
-                neighborCoords = { x: room.x + 1, y: room.y };
-                break;
-            case Direction.South:
-                neighborCoords = { x: room.x, y: room.y + 1 };
-                break;
-            default:
-            case Direction.West:
-                neighborCoords = { x: room.x - 1, y: room.y };
-                break;
-        }
-
-        let neighbor = workingGrid.getTilesAt(neighborCoords.x, neighborCoords.y - 1);
-        if (neighbor != null) {
-            tiles = this.filterTiles(neighbor, Direction.South, tiles);
-        }
-
-        neighbor = workingGrid.getTilesAt(neighborCoords.x + 1, neighborCoords.y);
-        if (neighbor != null) {
-            tiles = this.filterTiles(neighbor, Direction.West, tiles);
-        }
-
-        neighbor = workingGrid.getTilesAt(neighborCoords.x, neighborCoords.y + 1);
-        if (neighbor != null) {
-            tiles = this.filterTiles(neighbor, Direction.North, tiles);
-        }
-
-        neighbor = workingGrid.getTilesAt(neighborCoords.x - 1, neighborCoords.y);
-        if (neighbor != null) {
-            tiles = this.filterTiles(neighbor, Direction.East, tiles);
-        }
-        
-        const neighborTile = select(tiles);
-
-        if (thisTile && neighborTile) {
-            tileGrid.modifyTilesAt(neighborCoords.x, neighborCoords.y, () => [neighborTile]);
-            tileGrid.modifyTilesAt(room.x, room.y, () => [thisTile]);
-
-            return true;
-        }
-
-        return false;
+            if (hasA && hasB && hasC && hasD) {
+                tileGrid.modifyTilesAt(x, y+1, tiles => [removeCorner(tiles[0], 'a')]);
+                tileGrid.modifyTilesAt(x, y, tiles => [removeCorner(tiles[0], 'b')]);
+                tileGrid.modifyTilesAt(x+1, y, tiles => [removeCorner(tiles[0], 'c')]);
+                tileGrid.modifyTilesAt(x+1, y+1, tiles => [removeCorner(tiles[0], 'd')]);
+            }            
+        }}
     }
 
     private applyConstraintsToNeighbors(tileGrid: TileGrid, x: number, y: number) {
@@ -225,7 +112,7 @@ export class TileGridBuilder {
             return;
         }
 
-        const tile = select(tiles);
+        const tile = this.world.random.select(tiles);
 
         // North neighbors
         if (y > 0) {

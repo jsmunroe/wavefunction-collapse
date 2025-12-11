@@ -80,11 +80,11 @@ export default class Library implements ITileSource {
             const rexTilePath = /(?<name>\w+)_(?<walls>\d+\w*)\.png$/;
             const match = rexTilePath.exec(tile.path);
 
-            const name = match?.groups?.name ?? "Unknown";
+            const name = match?.groups?.name ?? "unknown";
             const walls = match?.groups?.walls ?? "0000";
 
             tiles.push(new ImageTile(
-                name,
+                `${name}_${walls}`,
                 walls,
                 tile.image, 
                 tile.north,

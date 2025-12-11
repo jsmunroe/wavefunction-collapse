@@ -4,10 +4,12 @@ import { Direction } from "../Openings";
 
 export default abstract class Tile {
     readonly openings: Openings;
+    readonly name: string;
 
     section: number = -1;
 
-    constructor(openings: Openings) {
+    constructor(name: string, openings: Openings) {
+        this.name = name;
         this.openings = openings;
     }
   

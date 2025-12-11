@@ -1,9 +1,7 @@
 import type Entity from "../../models/entities/Entity";
 import type { Game } from "../../models/Game";
 import { Direction } from "../../models/Openings";
-import { select } from "../../utils/random";
 import AiMover from "./AiMover";
-import Mover from "./Mover";
 
 export type RandomMoverOptions = {
     stepDelay?: number;
@@ -51,7 +49,7 @@ export default class RandomMover extends AiMover {
             return;
         }
 
-        const direction = select(validDirections);
+        const direction = this.random.select(validDirections);
 
         const coordinates = this.moveInRoom(direction, this.entity.coordinates);
 

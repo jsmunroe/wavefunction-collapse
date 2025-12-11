@@ -1,9 +1,8 @@
-import type IRoomContext from "../../contracts/IRoomContext";
+import type IGameContext from "../../contracts/IRoomContext";
 import { create, type Element2D } from "../../utils/arrays";
 import type { Point2D } from "../../models/World";
 import type Tile from "../../models/tiles/Tile";
 import NullTile from "../../models/tiles/NullTile";
-import { select } from "../../utils/random";
 
 export default class TileGrid {
     private _tiles: Tile[][][];
@@ -11,14 +10,14 @@ export default class TileGrid {
     readonly width: number;
     readonly height: number;
 
-    private _roomContext: IRoomContext;
+    private _gameContext: IGameContext;
     private _worldCoordinates: Point2D;
 
-    constructor(world: Point2D, width: number, height: number, roomContext: IRoomContext, tiles: Tile[]) {
+    constructor(world: Point2D, width: number, height: number, gameContext: IGameContext, tiles: Tile[]) {
         this._tiles = create(height, () => create(width, () => [...tiles]));
         this.width = width;
         this.height = height;
-        this._roomContext = roomContext;
+        this._gameContext = gameContext;
         this._worldCoordinates = world;
     }
 
@@ -27,7 +26,7 @@ export default class TileGrid {
     }
 
     get tiles(): Tile[][] {
-        return this._tiles.map2D(tiles => select(tiles));
+        return this._tiles.map2D(tiles => this._gameContext.random.select(tiles));
     }
 
     get allTiles(): Element2D<Tile>[] {
@@ -44,7 +43,7 @@ export default class TileGrid {
 
     getTilesAt(x: number, y: number): Tile[] | null {
         if (x < 0 || x >= this.width || y < 0 || y >= this.height || this._tiles[y][x].length === 0) {
-            const tile = this._roomContext.getRelativeTile(this._worldCoordinates, {x, y});
+            const tile = this._gameContext.getRelativeTile(this._worldCoordinates, {x, y});
 
             return tile ? [tile] : null;
         }
@@ -67,7 +66,7 @@ export default class TileGrid {
         this._tiles[y][x] = modifier(this._tiles[y][x]);
 
         if (this._tiles[y][x].length === 0) {
-            this._tiles[y][x] = [new NullTile(this._roomContext, { world: this._worldCoordinates, room: { x, y } })];
+            this._tiles[y][x] = [new NullTile(this._gameContext, { world: this._worldCoordinates, room: { x, y } })];
         }
     }
 
@@ -76,14 +75,14 @@ export default class TileGrid {
             for (let x = 0; x < this.width; x++) {
                 this._tiles[y][x] = modifier(x, y, this._tiles[y][x]);
                 if (this._tiles[y][x].length === 0) {
-                    this._tiles[y][x] = [new NullTile(this._roomContext, { world: this._worldCoordinates, room: { x, y } })];
+                    this._tiles[y][x] = [new NullTile(this._gameContext, { world: this._worldCoordinates, room: { x, y } })];
                 }
             }
         }
     }
 
     clone(): TileGrid {
-        const tileGrid = new TileGrid(this._worldCoordinates, this.width, this.height, this._roomContext, []);
+        const tileGrid = new TileGrid(this._worldCoordinates, this.width, this.height, this._gameContext, []);
         tileGrid._tiles = this._tiles.map(row => row.map(tiles => [...tiles]));
         return tileGrid;
     }

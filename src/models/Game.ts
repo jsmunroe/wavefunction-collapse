@@ -1,6 +1,7 @@
 import Library from "../services/Library";
 import Player from "./entities/Player";
 import World from "./World";
+import { RandomSource, type Rng } from "../utils/random"
 
 export class Game {
     private _world: World;
@@ -9,10 +10,11 @@ export class Game {
     private _library: Library
 
     private _isStarted: boolean = false;
+    private _randomSource: RandomSource;
 
-    constructor() {
+    constructor(random: Rng) {
         this._library = new Library();
-        
+        this._randomSource = new RandomSource(random);
         this._world = new World(this);
 
         this._player = new Player(this);
@@ -32,6 +34,10 @@ export class Game {
 
     get isStarted(): boolean {
         return this._isStarted;
+    }
+
+    get random(): RandomSource {
+        return this._randomSource;
     }
 
     newGame(): Promise<void> {
