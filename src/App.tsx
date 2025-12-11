@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import RoomView from './components/RoomView'
 import './App.css'
-import { GameContext } from './hooks/useGame';
+import useGame, { GameContext } from './hooks/useGame';
 import { Game } from './models/Game';
 
 function App() {
-  const [game] = useState(() => new Game);
+  const game = useGame();
   
   return (
     <GameContext.Provider value={game}>
-      <RoomView />
+      {game.isStarted && <RoomView />}
     </GameContext.Provider>
   )
 }

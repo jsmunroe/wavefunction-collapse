@@ -24,6 +24,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "fast-glob": "^3.3.3",
     "fs": "^0.0.1-security",
+    "get-pixels": "^3.3.3",
     "globals": "^16.5.0",
     "path": "^0.12.7",
     "typescript": "~5.9.3",

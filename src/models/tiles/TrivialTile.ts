@@ -1,20 +1,11 @@
-import { Boundary } from "./Boundary";
-import type { Openings } from "./Openings";
-import { Direction, isOpen } from "./Openings";
+import type { Openings } from "../Openings";
+import { Direction, isOpen } from "../Openings";
+import Tile from "./Tile";
 
-export default class Tile {
+export default class TrivialTile extends Tile {
 
     constructor(openings: Openings) {
-        this.openings = openings;
-    }
-
-    section: number = -1;
-
-    openings: Openings;
-
-
-    boundary(direction: Direction): Boundary {
-        return new Boundary(this.openings, direction);
+        super(openings);
     }
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -39,20 +30,18 @@ export default class Tile {
         if (!isOpen(this.openings, Direction.West)) {
             ctx.fillRect(0, 8, 8, 48);
         }
-
-        ctx.strokeRect(0, 0, 64, 64);
     }
 
-    static get all(): Tile[] {
+    static get all(): TrivialTile[] {
         return buildTrivialTiles();
     }
 }
 
-function buildTrivialTiles(): Tile[] {
-    const tiles: Tile[] = [];
+function buildTrivialTiles(): TrivialTile[] {
+    const tiles: TrivialTile[] = [];
 
     for (let i = 0; i < 16; i++) {
-        tiles.push(new Tile(i));
+        tiles.push(new TrivialTile(i));
     }
 
     return tiles;

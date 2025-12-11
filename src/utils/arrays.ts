@@ -8,6 +8,28 @@ export function create<TItem>(length: number, factory: (index: number) => TItem)
     return array;
 }
 
+export function equal(a: any[], b: any[]): boolean {
+    if (a === b) { 
+        return true;
+    }
+
+    if (!a || !b) {
+        return false;
+    }
+
+    if (a.length !== b.length) {
+        return false;
+    }
+
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 export function range(max: number): number[];
 export function range(min: number, max: number): number[];
 export function range(min: number, max?: number): number[] {

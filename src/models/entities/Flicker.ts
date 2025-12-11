@@ -18,25 +18,13 @@ export default class Flicker extends Entity {
         return `flicker.floating.${frame}`;
     }
 
-    moveTo(direction: Direction, coordinates: Coordinates): Promise<void> {
+    async moveTo(direction: Direction, coordinates: Coordinates): Promise<void> {
         if (this._isMoving) {
             return Promise.resolve();
         }
-
-        this._isMoving = true;
-        this.computeFacingAndMoving(direction);
-
-        this._coordinates = coordinates;
-
-        const formerRoom = this._currentRoom;
-
-        this._currentRoom = this.world.getRoom(this.coordinates.world);
-
-        if (formerRoom !== this._currentRoom) {
-            formerRoom.removeSprite(this);
-            this._currentRoom.addSprite(this);
-        }
         
+        await super.moveTo(direction, coordinates);
+
         return this.animate([], 1024);
     }
 }

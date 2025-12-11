@@ -37,8 +37,6 @@ export default abstract class Entity implements IMovableSprite {
 
     protected _coordinates: Coordinates;
 
-    protected _currentRoom: Room;
-
     protected _mover: Mover;
 
     protected moving: Point2D = { x: 1, y: 1 };
@@ -64,8 +62,6 @@ export default abstract class Entity implements IMovableSprite {
         this.game = game;
         this.world = game.world;
         this._coordinates = coordinates;
-        this._currentRoom = this.world.getRoom(this.coordinates.world);
-        this._currentRoom.addSprite(this);
 
         this._mover = new RandomMover(this.game, this);
 
@@ -86,8 +82,8 @@ export default abstract class Entity implements IMovableSprite {
         return this._coordinates;
     }
 
-    get currentRoom(): Room {
-        return this._currentRoom;
+    get currentRoom(): Room | null {
+        return this.world.getRoom(this.coordinates.world);
     }
 
     get isMoving(): boolean {
@@ -106,7 +102,27 @@ export default abstract class Entity implements IMovableSprite {
         return this._currentBattle;
     }
 
-    abstract moveTo(direction: Direction, coordinates: Coordinates): Promise<void>;
+    moveTo(direction: Direction, coordinates: Coordinates): Promise<void> {
+        if (this._isMoving) {
+            return Promise.resolve();
+        }
+
+        this._isMoving = true;
+        this.computeFacingAndMoving(direction);
+
+        const formerRoom = this.currentRoom;
+
+        this._coordinates = coordinates;
+
+        const currentRoom = this.world.getRoom(this.coordinates.world);
+
+        if (formerRoom !== currentRoom) {
+            formerRoom?.removeSprite(this);
+            currentRoom.addSprite(this);
+        }
+
+        return Promise.resolve();
+    }
 
     attack(direction: Direction): Promise<void> {
         return this.animateAttack(direction);
@@ -129,7 +145,7 @@ export default abstract class Entity implements IMovableSprite {
 
         ctx.imageSmoothingEnabled = false;
         ctx.beginPath();
-        const image = this.game.library.getImage(this.sprite);
+        const image = this.game.library.getSprite(this.sprite);
         if (image) {
             ctx.drawImage(image, 0, 0);
         }
@@ -151,13 +167,13 @@ export default abstract class Entity implements IMovableSprite {
     }
 
     setCurrentRoom(x: number, y: number) {
-        this.coordinates.room = { x, y };
-        if (this._currentRoom) {
-            this._currentRoom.removeSprite(this);
+        if (this.currentRoom) {
+            this.currentRoom.removeSprite(this);
         }
 
-        this._currentRoom = this.world.getRoom(this.coordinates.world);
-        this._currentRoom.addSprite(this);
+        this.coordinates.room = { x, y };
+
+        this.currentRoom?.addSprite(this);
     }
 
     startBattle(battle: Battle): void {
@@ -254,14 +270,15 @@ export default abstract class Entity implements IMovableSprite {
     }
 
     protected async battle(coordinates: Coordinates): Promise<void> {
-        const currentBattle = new Battle(this.currentRoom, this.coordinates, coordinates);
+        const currentRoom = this.world.getRoom(this.coordinates.world);        
+        const currentBattle = new Battle(currentRoom, this.coordinates, coordinates);
 
         const battleCoordinates = {
             x: (currentBattle.side1.x + currentBattle.side2.x) / 2,
             y: (currentBattle.side1.y + currentBattle.side2.y) / 2,
         };
 
-        await this.currentRoom.zoomIn(battleCoordinates);
+        await this.currentRoom?.zoomIn(battleCoordinates);
     }
 
     protected computeFacingAndMoving(direction: Direction) {

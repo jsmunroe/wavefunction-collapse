@@ -9,18 +9,6 @@
             "path": "/wavefunction-collapse/sprites/blob/blob.png"
         },
         {
-            "name": "player",
-            "path": "/wavefunction-collapse/sprites/player/player.png"
-        },
-        {
-            "name": "player.walking.0",
-            "path": "/wavefunction-collapse/sprites/player/player.walking.0.png"
-        },
-        {
-            "name": "player.walking.1",
-            "path": "/wavefunction-collapse/sprites/player/player.walking.1.png"
-        },
-        {
             "name": "flicker.floating.0",
             "path": "/wavefunction-collapse/sprites/flicker/flicker.floating.0.png"
         },
@@ -55,6 +43,1205 @@
         {
             "name": "flicker",
             "path": "/wavefunction-collapse/sprites/flicker/flicker.png"
+        },
+        {
+            "name": "player",
+            "path": "/wavefunction-collapse/sprites/player/player.png"
+        },
+        {
+            "name": "player.walking.0",
+            "path": "/wavefunction-collapse/sprites/player/player.walking.0.png"
+        },
+        {
+            "name": "player.walking.1",
+            "path": "/wavefunction-collapse/sprites/player/player.walking.1.png"
         }
-    ]
+    ],
+    "tiles": {
+        "cave": [
+            {
+                "group": "cave",
+                "name": "cave_0000",
+                "north": [],
+                "west": [],
+                "south": [],
+                "east": [],
+                "northEast": false,
+                "southEast": false,
+                "northWest": false,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000a",
+                "north": [
+                    51
+                ],
+                "west": [],
+                "south": [],
+                "east": [
+                    9,
+                    10,
+                    11
+                ],
+                "northEast": true,
+                "southEast": false,
+                "northWest": false,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000a.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000ab",
+                "north": [
+                    51
+                ],
+                "west": [],
+                "south": [
+                    51
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": false,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000ab.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000abc",
+                "north": [
+                    51
+                ],
+                "west": [
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": false,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000abc.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000abcd",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000abcd.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000abd",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    9,
+                    10,
+                    11
+                ],
+                "south": [
+                    51
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000abd.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000ac",
+                "north": [
+                    51
+                ],
+                "west": [
+                    48
+                ],
+                "south": [
+                    14
+                ],
+                "east": [
+                    9,
+                    10,
+                    11
+                ],
+                "northEast": true,
+                "southEast": false,
+                "northWest": false,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000ac.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000acd",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    14
+                ],
+                "east": [
+                    9,
+                    10,
+                    11
+                ],
+                "northEast": true,
+                "southEast": false,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000acd.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000ad",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    9,
+                    10,
+                    11
+                ],
+                "south": [],
+                "east": [
+                    9,
+                    10,
+                    11
+                ],
+                "northEast": true,
+                "southEast": false,
+                "northWest": true,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000ad.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000b",
+                "north": [],
+                "west": [],
+                "south": [
+                    51
+                ],
+                "east": [
+                    48
+                ],
+                "northEast": false,
+                "southEast": true,
+                "northWest": false,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000b.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000bc",
+                "north": [],
+                "west": [
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    48
+                ],
+                "northEast": false,
+                "southEast": true,
+                "northWest": false,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000bc.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000bcd",
+                "north": [
+                    14
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    48
+                ],
+                "northEast": false,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000bcd.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000bd",
+                "north": [
+                    14
+                ],
+                "west": [
+                    9,
+                    10,
+                    11
+                ],
+                "south": [
+                    51
+                ],
+                "east": [
+                    48
+                ],
+                "northEast": false,
+                "southEast": true,
+                "northWest": true,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000bd.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000c",
+                "north": [],
+                "west": [
+                    48
+                ],
+                "south": [
+                    14
+                ],
+                "east": [],
+                "northEast": false,
+                "southEast": false,
+                "northWest": false,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000c.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000cd",
+                "north": [
+                    14
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    14
+                ],
+                "east": [],
+                "northEast": false,
+                "southEast": false,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000cd.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0000d",
+                "north": [
+                    14
+                ],
+                "west": [
+                    9,
+                    10,
+                    11
+                ],
+                "south": [],
+                "east": [],
+                "northEast": false,
+                "southEast": false,
+                "northWest": true,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0000d.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0001",
+                "north": [
+                    14
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    14
+                ],
+                "east": [],
+                "northEast": false,
+                "southEast": false,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0001.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0001a",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    14
+                ],
+                "east": [
+                    9,
+                    10,
+                    11
+                ],
+                "northEast": true,
+                "southEast": false,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0001a.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0001ab",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0001ab.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0001b",
+                "north": [
+                    14
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    48
+                ],
+                "northEast": false,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0001b.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0010",
+                "north": [],
+                "west": [
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    48
+                ],
+                "northEast": false,
+                "southEast": true,
+                "northWest": false,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0010.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0010a",
+                "north": [
+                    51
+                ],
+                "west": [
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": false,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0010a.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0010ad",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0010ad.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0010d",
+                "north": [
+                    14
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    48
+                ],
+                "northEast": false,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0010d.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0011",
+                "north": [
+                    14
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    48
+                ],
+                "northEast": false,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0011.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0011a",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0011a.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0100",
+                "north": [
+                    51
+                ],
+                "west": [],
+                "south": [
+                    51
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": false,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0100.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0100c",
+                "north": [
+                    51
+                ],
+                "west": [
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": false,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0100c.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0100cd",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0100cd.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0100d",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    9,
+                    10,
+                    11
+                ],
+                "south": [
+                    51
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0100d.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0101",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0101.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0110",
+                "north": [
+                    51
+                ],
+                "west": [
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": false,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0110.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0110d",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0110d.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_0111",
+                "north": [
+                    14,
+                    51
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_0111.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1000",
+                "north": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    9,
+                    10,
+                    11
+                ],
+                "south": [],
+                "east": [
+                    9,
+                    10,
+                    11
+                ],
+                "northEast": true,
+                "southEast": false,
+                "northWest": true,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1000.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1000b",
+                "north": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    9,
+                    10,
+                    11
+                ],
+                "south": [
+                    51
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": false,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1000b.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1000bc",
+                "north": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1000bc.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1000c",
+                "north": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    14
+                ],
+                "east": [
+                    9,
+                    10,
+                    11
+                ],
+                "northEast": true,
+                "southEast": false,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1000c.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1001",
+                "north": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    14
+                ],
+                "east": [
+                    9,
+                    10,
+                    11
+                ],
+                "northEast": true,
+                "southEast": false,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1001.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1001b",
+                "north": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1001b.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1010",
+                "north": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1010.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1011",
+                "north": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1011.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1100c",
+                "north": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1100c.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1101",
+                "north": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    14,
+                    51
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1101.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1110",
+                "north": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    9,
+                    10,
+                    11,
+                    48
+                ],
+                "south": [
+                    6,
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1110.png"
+            },
+            {
+                "group": "cave",
+                "name": "cave_1111",
+                "north": [
+                    23,
+                    39,
+                    61
+                ],
+                "west": [
+                    10,
+                    27,
+                    48
+                ],
+                "south": [
+                    23,
+                    39,
+                    61
+                ],
+                "east": [
+                    10,
+                    27,
+                    48
+                ],
+                "northEast": true,
+                "southEast": true,
+                "northWest": true,
+                "southWest": true,
+                "path": "/wavefunction-collapse/tiles/cave/cave_1111.png"
+            }
+        ]
+    }
 }

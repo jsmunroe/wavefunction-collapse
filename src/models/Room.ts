@@ -1,6 +1,6 @@
 import type ISprite from "../contracts/ISprite";
 import type { Openings } from "./Openings";
-import Tile from "./Tile";
+import Tile from "./tiles/Tile";
 import type { Point2D } from "./World";
 import { equals } from "./Coordinates";
 import { lerp, lerpPoint2D } from "../utils/math";
@@ -47,6 +47,14 @@ export default class Room {
         return this._coordinates.y;
     }
 
+    getTile({x, y}: Point2D): Tile | null {
+        if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
+            return null;
+        }
+
+        return this._tiles[y][x];
+    }
+
     addSprite(sprite: ISprite) {
         if (this._sprites.has(sprite)) {
             return;
@@ -87,7 +95,7 @@ export default class Room {
                 const tile = this._tiles[y][x];
                 ctx.save();
                 ctx.translate(x * 64, y * 64);
-                tile.draw(ctx);
+                tile?.draw(ctx);
                 ctx.restore();
             }
         }

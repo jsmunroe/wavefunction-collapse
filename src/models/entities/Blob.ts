@@ -10,24 +10,12 @@ export default class Blob extends Entity {
         this._mover = new RandomMover(this.game, this, { stepDelay: 1000 });
     }
 
-    moveTo(direction: Direction, coordinates: Coordinates): Promise<void> {
+    async moveTo(direction: Direction, coordinates: Coordinates): Promise<void> {
         if (this._isMoving) {
             return Promise.resolve();
         }
-
-        this._isMoving = true;
-        this.computeFacingAndMoving(direction);
-
-        this._coordinates = coordinates;
-
-        const formerRoom = this._currentRoom;
-
-        this._currentRoom = this.world.getRoom(this.coordinates.world);
-
-        if (formerRoom !== this._currentRoom) {
-            formerRoom.removeSprite(this);
-            this._currentRoom.addSprite(this);
-        }
+        
+        await super.moveTo(direction, coordinates);
 
         const sprites = [
             'blob.bouncing'

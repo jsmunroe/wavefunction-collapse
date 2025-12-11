@@ -6,6 +6,10 @@ export default function RoomView() {
 
     const room = game.player.currentRoom;
 
+    if (!room) {
+        return <></>;
+    }
+
     return (
         <div className="room-view">
             <canvas
@@ -31,11 +35,13 @@ const drawRoom = (canvas: HTMLCanvasElement | null, game: Game) => {
 
     const room = game.player.currentRoom;
 
-    for (const sprite of room.sprites) {
-        sprite.update();
-    }
+    if (room !== null) {
+        for (const sprite of room.sprites) {
+            sprite.update();
+        }
 
-    room.draw(ctx);
+        room.draw(ctx);
+    }
 
     requestAnimationFrame(() => drawRoom(canvas, game));
 }
